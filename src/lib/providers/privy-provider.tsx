@@ -3,9 +3,10 @@
 import { PrivyProvider } from '@privy-io/react-auth';
 import { PrivyWagmiConnector } from '@privy-io/wagmi-connector';
 import { ReactNode } from 'react';
+import { sepolia, baseSepolia } from 'wagmi/chains';
 
 // Replace with your actual Privy App ID
-const PRIVY_APP_ID = 'cltest-tokenbase';
+const PRIVY_APP_ID = 'cm8fgqcjr0119qqhsgob0rge3';
 
 export function PrivyAuthProvider({ children }: { children: ReactNode }) {
   return (
@@ -23,7 +24,14 @@ export function PrivyAuthProvider({ children }: { children: ReactNode }) {
         },
       }}
     >
-      <PrivyWagmiConnector>{children}</PrivyWagmiConnector>
+      <PrivyWagmiConnector
+        wagmiChainsConfig={{
+          chains: [sepolia, baseSepolia],
+          defaultChainId: sepolia.id,
+        }}
+      >
+        {children}
+      </PrivyWagmiConnector>
     </PrivyProvider>
   );
 }
