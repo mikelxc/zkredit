@@ -799,7 +799,7 @@ const getValidatorOwner = async () => {
               </span>
             </div>
             <p className="text-sm text-zinc-500">
-              © 2023 ZKredit. All rights reserved.
+              © 2025 ZKredit. All rights reserved.
             </p>
           </div>
         </div>
