@@ -88,7 +88,7 @@ export default function LandingPage() {
     <div className="flex min-h-screen flex-col dark">
       <Navbar />
 
-      <main className="flex-1 bg-zinc-950 text-white">
+      <main className="flex-1 bg-zinc-950 text-white w-full">
         {/* Hero Section */}
         <section className="w-full py-12 md:py-24 lg:py-32 xl:py-48 border-b border-zinc-800 relative overflow-hidden">
           <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-violet-900/20 via-zinc-900/5 to-zinc-950 z-0"></div>
@@ -181,7 +181,7 @@ export default function LandingPage() {
           ref={problemRef}
           className="w-full py-12 md:py-24 lg:py-32 border-b border-zinc-800 opacity-0 transition-opacity duration-700"
         >
-          <div className="container px-4 md:px-6">
+          <div className="container w-full px-4 md:px-6">
             <div className="flex flex-col items-center justify-center space-y-4 text-center">
               <div className="space-y-2">
                 <div className="inline-block rounded-lg bg-zinc-800 px-3 py-1 text-sm text-violet-400">
@@ -381,11 +381,7 @@ export default function LandingPage() {
               whileInView="visible"
               viewport={{ once: true, amount: 0.3 }}
             >
-              <motion.div
-                variants={fadeIn}
-                custom={0}
-                className="lg:col-span-3"
-              >
+              <motion.div variants={fadeIn} custom={0}>
                 <Card className="bg-zinc-900 border-zinc-800 hover:border-violet-500/50 transition-all duration-300 hover:-translate-y-1 h-full flex flex-col">
                   <CardHeader>
                     <Database className="h-10 w-10 text-violet-500 mb-2" />
@@ -630,7 +626,7 @@ export default function LandingPage() {
               </span>
             </div>
             <p className="text-sm text-zinc-500">
-              © 2025 ZKredit. All rights reserved.
+              &copy; 2025 ZKredit. All rights reserved.
             </p>
             <div className="flex items-center gap-4">
               <Link
