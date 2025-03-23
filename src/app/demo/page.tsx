@@ -984,7 +984,7 @@ contract ZKreditPaymaster is
                           <ol className="space-y-2 text-zinc-400 list-decimal pl-5">
                             <li>User receives an email from a specific domain</li>
                             <li>ZKEmail circuit extracts DKIM signature</li>
-                            <li>Circuit verifies signature against domain's public key</li>
+                            <li>Circuit verifies signature against domain&apos;s public key</li>
                             <li>Proof is generated showing valid email ownership</li>
                             <li>ZKredit contract validates the proof on-chain</li>
                           </ol>
