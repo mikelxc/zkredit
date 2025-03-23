@@ -117,7 +117,7 @@ export default function DocumentationPage() {
 
                           <h4 className="text-lg font-semibold mt-6">Quick Start</h4>
                           <p className="text-zinc-400 mb-4">
-                            Here's a simple example of how to initialize the ZKredit SDK and connect assets:
+                            Here&apos;s a simple example of how to initialize the ZKredit SDK and connect assets:
                           </p>
                           <div className="bg-zinc-950 p-4 rounded-md font-mono text-sm whitespace-pre overflow-x-auto">
                             {`import { ZKredit } from '@zkredit/sdk';
@@ -196,7 +196,7 @@ const generateProof = async (connection) => {
                           <div className="border border-zinc-800 rounded-lg p-6 bg-zinc-900/30 hover:border-violet-500/50 transition-all duration-300">
                             <h3 className="text-lg font-bold mb-2">AI Agent Integration</h3>
                             <p className="text-zinc-400 mb-4">
-                              Discover how to empower AI agents with ZKredit's financial passport system.
+                              Discover how to empower AI agents with ZKredit&apos;s financial passport system.
                             </p>
                             <Button variant="outline" className="w-full border-zinc-700">
                               Read Guide
@@ -342,7 +342,7 @@ const generateProof = async (connection) => {
 
                           <h3 className="text-lg font-bold mb-4">Financial Passport</h3>
                           <p className="text-zinc-400 mb-6">
-                            A financial passport is a cryptographic credential that verifies an entity's financial
+                            A financial passport is a cryptographic credential that verifies an entity&apos;s financial
                             standing without revealing sensitive details. It enables cross-chain operations by proving
                             asset backing without requiring pre-funding or asset transfers.
                           </p>
@@ -410,7 +410,7 @@ const generateProof = async (connection) => {
                             <div className="border border-zinc-800 rounded-md p-4">
                               <h4 className="font-bold mb-2">Is ZKredit audited?</h4>
                               <p className="text-zinc-400 text-sm">
-                                Yes, ZKredit's smart contracts and ZK circuits have been audited by leading security
+                                Yes, ZKredit&apos;s smart contracts and ZK circuits have been audited by leading security
                                 firms. Audit reports are available on our GitHub repository.
                               </p>
                             </div>

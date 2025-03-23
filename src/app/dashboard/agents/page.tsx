@@ -6,7 +6,6 @@ import {
   Card, 
   CardContent, 
   CardDescription, 
-  CardFooter, 
   CardHeader, 
   CardTitle 
 } from '@/components/ui/card';
@@ -33,7 +32,6 @@ import { Switch } from '@/components/ui/switch';
 import { 
   Table, 
   TableBody, 
-  TableCaption, 
   TableCell, 
   TableHead, 
   TableHeader, 
@@ -50,9 +48,9 @@ import {
   Shield,
   Zap,
   Globe,
-  ArrowRight
+  ArrowRight,
+  BarChart
 } from 'lucide-react';
-import { AgentConfig, ZkProof } from '@/lib/types';
 
 // Mock agent templates
 const AGENT_TEMPLATES = [
@@ -102,7 +100,7 @@ export default function AgentsPage() {
   const activeAgents = agentConfigs.filter(agent => agent.status === 'active');
   const inactiveAgents = agentConfigs.filter(agent => agent.status !== 'active');
   
-  // Filter valid proofs
+  // Filter active proofs
   const validProofs = zkProofs.filter(proof => proof.status === 'valid');
 
   // Mock function to create a new agent
@@ -241,7 +239,7 @@ export default function AgentsPage() {
                     <SelectContent>
                       {validProofs.map((proof) => (
                         <SelectItem key={proof.id} value={proof.id}>
-                          {proof.publicInputs.assetType} - {proof.publicInputs.thresholdMet ? 'Balance' : 'Ownership'} Proof
+                          {proof.proofType} - {proof.assetTicker || 'Asset'} Proof
                         </SelectItem>
                       ))}
                     </SelectContent>
@@ -467,7 +465,7 @@ export default function AgentsPage() {
                 className="flex flex-col p-6 border rounded-lg hover:border-blue-500 transition-colors"
               >
                 <div className="h-12 w-12 mb-4 bg-blue-100 rounded-full flex items-center justify-center">
-                  {template.icon === 'chart' && <BarChart4 className="h-6 w-6 text-blue-600" />}
+                  {template.icon === 'chart' && <BarChart className="h-6 w-6 text-blue-600" />}
                   {template.icon === 'money' && <Zap className="h-6 w-6 text-blue-600" />}
                   {template.icon === 'image' && <Globe className="h-6 w-6 text-blue-600" />}
                   {template.icon === 'credit-card' && <Cpu className="h-6 w-6 text-blue-600" />}

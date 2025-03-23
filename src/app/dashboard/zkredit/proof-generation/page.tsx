@@ -11,11 +11,11 @@ export default function ProofGenerationPage() {
   const { zkProofs, refreshUserData, isLoading } = useUser();
   const [isFormModalOpen, setIsFormModalOpen] = useState(false);
   const [isSuccessModalOpen, setIsSuccessModalOpen] = useState(false);
-  const [generatedProofId, setGeneratedProofId] = useState<string | null>(null);
+  // State for tracking the proof generation process
 
   // Handle successful proof generation
-  const handleProofGenerated = (proofId: string) => {
-    setGeneratedProofId(proofId);
+  const handleProofGenerated = () => {
+    // Use proofId directly without storing in state
     setIsFormModalOpen(false);
     setIsSuccessModalOpen(true);
     refreshUserData();

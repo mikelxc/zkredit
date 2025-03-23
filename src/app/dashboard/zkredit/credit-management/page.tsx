@@ -5,8 +5,7 @@ import { useUser } from '@/lib/providers/user-provider';
 import { CRYPTOCURRENCIES } from '@/lib/utils/mock-data';
 import { Dialog, Transition } from '@headlessui/react';
 import { Fragment } from 'react';
-import { v4 as uuidv4 } from 'uuid';
-import Link from 'next/link';
+
 
 export default function CreditManagementPage() {
   const { creditLine, assets, refreshUserData, isLoading } = useUser();
@@ -27,22 +26,6 @@ export default function CreditManagementPage() {
   const availableCredit = creditLine ? creditLine.totalLimit - creditLine.usedAmount : 0;
 
   const handleCreateCreditLine = () => {
-    const newCreditLine = {
-      id: uuidv4(),
-      userId: assets[0]?.userId || 'user-id',
-      name: 'Primary Credit Line',
-      totalLimit: creditLimit,
-      usedAmount: 0,
-      limit: creditLimit,
-      used: 0,
-      interestRate: interestRate,
-      status: 'active' as const,
-      collateralAssetIds: selectedAssetIds,
-      expiresAt: new Date(Date.now() + 365 * 24 * 60 * 60 * 1000).toISOString(),
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString()
-    };
-
     // In a real app, this would be an API call
     setTimeout(() => {
       refreshUserData();

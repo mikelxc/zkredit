@@ -193,7 +193,7 @@ export default function ProfilePage() {
         <div className="border-t border-gray-200">
           <div className="px-4 py-5 sm:p-6">
             <ul className="space-y-4">
-              {zkProofs.slice(0, 5).map((proof, index) => (
+              {zkProofs.slice(0, 5).map((proof) => (
                 <li key={proof.id} className="flex items-start space-x-3">
                   <div className="flex-shrink-0 h-8 w-8 flex items-center justify-center rounded-full bg-blue-100 text-blue-600">
                     <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">

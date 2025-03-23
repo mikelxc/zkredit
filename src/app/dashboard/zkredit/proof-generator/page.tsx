@@ -35,7 +35,7 @@ export default function ProofGeneratorPage() {
       const newProof = {
         id: uuidv4(),
         userId: asset.userId,
-        proofType: proofType as any,
+        proofType: proofType as 'ownership' | 'balance' | 'credit' | 'Asset Claim' | 'Credit Line' | 'Agent Authority',
         proofData: `0x${Array(64).fill(0).map(() => Math.floor(Math.random() * 16).toString(16)).join('')}`,
         assetId: asset.id,
         assetTicker: asset.ticker,

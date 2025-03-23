@@ -3,7 +3,6 @@
 import { useUser } from '@/lib/providers/user-provider';
 import { CRYPTOCURRENCIES } from '@/lib/utils/mock-data';
 import { ArrowUpIcon, ArrowDownIcon } from '@heroicons/react/24/solid';
-import { DashboardOverview } from '@/components/dashboard/dashboard-overview';
 import { 
   Chart as ChartJS, 
   ArcElement, 
@@ -16,7 +15,6 @@ import {
   Title
 } from 'chart.js';
 import { Doughnut, Line } from 'react-chartjs-2';
-import Link from 'next/link';
 
 // Register Chart.js components
 ChartJS.register(

@@ -13,10 +13,7 @@ export default function TradePage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [tradeComplete, setTradeComplete] = useState(false);
 
-  // Get available cryptocurrencies for trading
-  const availableCryptos = CRYPTOCURRENCIES.filter(crypto => 
-    assets.some(asset => asset.ticker === crypto.ticker)
-  );
+  // Filter cryptocurrencies is done in the UI directly
 
   // Calculate exchange rate
   const getExchangeRate = (from: string, to: string) => {

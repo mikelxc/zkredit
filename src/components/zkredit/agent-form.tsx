@@ -249,7 +249,7 @@ export default function AgentForm({ agent, onSave, onCancel }: AgentFormProps) {
               />
             </div>
             <p className="mt-2 text-sm text-gray-500">
-              You'll be notified when spending reaches this % of the daily limit.
+              You&apos;ll be notified when spending reaches this % of the daily limit.
             </p>
           </div>
         </div>

@@ -151,7 +151,7 @@ export default function LandingPage() {
               <div className="space-y-2">
                 <div className="inline-block rounded-lg bg-zinc-800 px-3 py-1 text-sm text-violet-400">The Problem</div>
                 <h2 className="text-3xl font-bold tracking-tighter md:text-4xl/tight bg-gradient-to-r from-white to-zinc-400 bg-clip-text text-transparent">
-                  Today's AI Agents Are Crippled by Blockchain's Fragmented Nature
+                  Today&apos;s AI Agents Are Crippled by Blockchain&apos;s Fragmented Nature
                 </h2>
                 <p className="max-w-[900px] text-zinc-400 md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
                   The current blockchain ecosystem forces inefficient capital allocation and limits AI agent
@@ -207,7 +207,7 @@ export default function LandingPage() {
                       <CardTitle className="text-white">Limited Credit Validation</CardTitle>
                     </CardHeader>
                     <CardContent className="text-zinc-400">
-                      Credit facilities can't easily validate agent operations across chains, restricting financing
+                      Credit facilities can&apos;t easily validate agent operations across chains, restricting financing
                       options.
                     </CardContent>
                   </Card>
@@ -360,14 +360,14 @@ export default function LandingPage() {
                     </div>
                     <div>
                       <h3 className="text-xl font-bold text-white mb-2">Generate ZK Proofs</h3>
-                      <p className="text-zinc-400">ZKredit generates zero-knowledge proofs of available "spendable assets" in a secure Trusted Execution Environment (TEE).</p>
+                      <p className="text-zinc-400">ZKredit generates zero-knowledge proofs of available &quot;spendable assets&quot; in a secure Trusted Execution Environment (TEE).</p>
                     </div>
                   </div>
                   
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
                     <div className="md:text-right order-2 md:order-1">
                       <h3 className="text-xl font-bold text-white mb-2">Issue Financial Passport</h3>
-                      <p className="text-zinc-400">The agent receives these cryptographic "financial passport" credentials that verify asset backing without revealing sensitive details.</p>
+                      <p className="text-zinc-400">The agent receives these cryptographic &quot;financial passport&quot; credentials that verify asset backing without revealing sensitive details.</p>
                     </div>
                     <div className="flex justify-center md:justify-start order-1 md:order-2">
                       <div className="w-16 h-16 rounded-full bg-zinc-800 border border-violet-500 flex items-center justify-center relative z-10">

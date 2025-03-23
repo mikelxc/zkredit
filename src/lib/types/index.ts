@@ -80,7 +80,7 @@ export interface ZkProof {
   assetTicker?: string; // Added for display purposes
   amount: number;
   targetChain: string;
-  status: 'active' | 'expired' | 'revoked';
+  status: 'active' | 'expired' | 'revoked' | 'pending' | 'invalid' | 'valid';
   expiresAt: string;
   createdAt: string;
 }

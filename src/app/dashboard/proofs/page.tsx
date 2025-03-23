@@ -19,7 +19,6 @@ import {
   SelectTrigger, 
   SelectValue 
 } from '@/components/ui/select';
-import { Input } from '@/components/ui/input';
 import { Slider } from '@/components/ui/slider';
 import { 
   Table, 
@@ -45,10 +44,9 @@ import {
 } from 'lucide-react';
 import { generateBalanceProof, generateOwnershipProof, ProofOutput } from '@/lib/utils/zk-proof';
 import { CRYPTOCURRENCIES } from '@/lib/utils/mock-data';
-import { Asset } from '@/lib/types';
 
 export default function ProofsPage() {
-  const { user, assets, isLoading } = useUser();
+  const { assets, isLoading } = useUser();
   const { user: privyUser } = usePrivy();
   const [selectedAsset, setSelectedAsset] = useState<string>('');
   const [proofType, setProofType] = useState<'balance' | 'ownership'>('balance');

@@ -16,7 +16,7 @@ interface CreateAgentFormProps {
     type: string;
     proofId: string;
     permissions: string[];
-    config: Record<string, any>;
+    config: Record<string, unknown>;
   }) => Promise<void>;
   isLoading?: boolean;
 }

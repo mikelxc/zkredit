@@ -2,7 +2,6 @@
 
 import { useState } from 'react';
 import { useUser } from '@/lib/providers/user-provider';
-import { usePrivy } from '@privy-io/react-auth';
 import { 
   Card, 
   CardContent, 
@@ -17,14 +16,10 @@ import {
   Wallet, 
   Database, 
   RefreshCw, 
-  CheckCircle2, 
   PlusCircle,
-  ArrowRight,
   Link as LinkIcon,
   Shield
 } from 'lucide-react';
-import Image from 'next/image';
-import { Asset } from '@/lib/types';
 
 // Mock exchange logos
 const EXCHANGES = [
@@ -35,8 +30,7 @@ const EXCHANGES = [
 ];
 
 export default function ConnectPage() {
-  const { user, assets, refreshUserData, isLoading } = useUser();
-  const { connectWallet, disconnectWallet, wallets, ready, authenticated } = usePrivy();
+  const { assets, refreshUserData, isLoading } = useUser();
   const [connectingExchange, setConnectingExchange] = useState<string | null>(null);
   const [isRefreshing, setIsRefreshing] = useState(false);
 

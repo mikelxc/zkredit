@@ -96,7 +96,7 @@ export interface AgentConfig {
   createdAt: number;
   updatedAt: number;
   lastActive?: number;
-  config?: Record<string, any>;
+  config?: Record<string, unknown>;
 }
 
 // Proof generation related types

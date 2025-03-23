@@ -165,7 +165,7 @@ export default function AssetLockingPage() {
                       const crypto = CRYPTOCURRENCIES.find(c => c.ticker === asset.ticker);
                       const price = crypto?.price || 0;
                       const value = asset.balance * price;
-                      const lockedValue = asset.lockedBalance * price;
+                      // Locked value can be calculated if needed
                       
                       return (
                         <tr key={asset.id}>
@@ -444,7 +444,7 @@ export default function AssetLockingPage() {
                         name="purpose"
                         className="mt-2 block w-full rounded-md border-0 py-1.5 pl-3 pr-10 text-gray-900 ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-teal-600 sm:text-sm sm:leading-6"
                         value={lockPurpose}
-                        onChange={(e) => setLockPurpose(e.target.value as any)}
+                        onChange={(e) => setLockPurpose(e.target.value as 'Agent Operations' | 'Credit Backing' | 'Direct Transactions')}
                       >
                         <option value="Agent Operations">Agent Operations</option>
                         <option value="Credit Backing">Credit Backing</option>
