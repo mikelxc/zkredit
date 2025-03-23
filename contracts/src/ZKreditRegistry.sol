@@ -95,8 +95,8 @@ contract ZKreditRegistry is
     /**
      * @notice Initializes the contract (used for proxy pattern)
      */
-    function initialize() external initializer {
-        __Ownable_init(msg.sender);
+    function initialize(address _owner) external initializer {
+        __Ownable_init(_owner);
         __UUPSUpgradeable_init();
     }
 

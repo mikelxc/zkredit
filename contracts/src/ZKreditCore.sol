@@ -147,9 +147,10 @@ contract ZKreditCore is
     function initialize(
         address _entryPoint,
         address _registry,
-        address _defaultValidator
+        address _defaultValidator,
+        address _owner
     ) external initializer {
-        __Ownable_init(msg.sender);
+        __Ownable_init(_owner);
         __UUPSUpgradeable_init();
 
         entryPoint = IEntryPoint(_entryPoint);
