@@ -1,6 +1,6 @@
 'use client';
 
-import { ReactNode } from 'react';
+import { ReactNode, useEffect } from 'react';
 import { usePrivy } from '@privy-io/react-auth';
 import { useRouter } from 'next/navigation';
 import Navbar from './navbar';
@@ -10,14 +10,15 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
   const { ready, authenticated } = usePrivy();
   const router = useRouter();
 
-  // Redirect to login if not authenticated
-  if (ready && !authenticated) {
-    router.push('/auth');
-    return null;
-  }
+  // Use useEffect for redirects instead of during render
+  useEffect(() => {
+    if (ready && !authenticated) {
+      router.push('/auth');
+    }
+  }, [ready, authenticated, router]);
 
   // Show loading state while checking authentication
-  if (!ready) {
+  if (!ready || (ready && !authenticated)) {
     return (
       <div className="flex min-h-screen items-center justify-center">
         <div className="text-center">
