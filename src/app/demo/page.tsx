@@ -43,13 +43,14 @@ export default function DemoPage() {
                 onValueChange={setActiveTab}
                 className="w-full"
               >
-                <TabsList className="grid w-full max-w-4xl grid-cols-6 mb-8">
+                <TabsList className="grid w-full max-w-4xl grid-cols-7 mb-8">
                   <TabsTrigger value="base-contract">Core Contract</TabsTrigger>
                   <TabsTrigger value="registry">Registry</TabsTrigger>
                   <TabsTrigger value="default-validator">Default Validator</TabsTrigger>
                   <TabsTrigger value="paymaster">Paymaster</TabsTrigger>
                   <TabsTrigger value="sp1-credit">SP1 Credit</TabsTrigger>
                   <TabsTrigger value="noir-jwt">Noir JWT</TabsTrigger>
+                  <TabsTrigger value="zkemail">ZKEmail</TabsTrigger>
                 </TabsList>
 
                 <TabsContent value="base-contract" className="space-y-4">
@@ -59,7 +60,7 @@ export default function DemoPage() {
                         ZKredit Core Contract
                       </h2>
                       <p className="text-zinc-400">
-                        The foundation of ZKredit is a smart contract that handles deposits, withdrawals, 
+                        The foundation of ZKredit is a smart contract that handles deposits, withdrawals,
                         and validates operations through a registry of validators.
                       </p>
                       <p className="text-sm text-violet-400 mt-2">
@@ -72,7 +73,7 @@ export default function DemoPage() {
                         Contract Architecture
                       </h3>
                       <p className="text-zinc-400 mb-6">
-                        ZKreditCore implements a robust system for asset handling with validator-based 
+                        ZKreditCore implements a robust system for asset handling with validator-based
                         approval flow, ERC-4337 compatibility, and upgradability.
                       </p>
 
@@ -715,13 +716,14 @@ contract ZKreditPaymaster is
                           <ArrowLeft className="h-4 w-4 mr-2" />
                           Back to Default Validator
                         </Button>
-                        <Button
-                          className="bg-gradient-to-r from-violet-600 to-blue-600 hover:from-violet-700 hover:to-blue-700"
-                          onClick={() => setActiveTab("sp1-credit")}
-                        >
-                          Explore SP1 Credit Verification{" "}
-                          <ChevronRight className="h-4 w-4 ml-2" />
-                        </Button>
+                        <Link href="/demo/cex-trust">
+                          <Button
+                            className="bg-gradient-to-r from-violet-600 to-blue-600 hover:from-violet-700 hover:to-blue-700"
+                          >
+                            Explore CEX Verification Demo
+                            <ChevronRight className="h-4 w-4 ml-2" />
+                          </Button>
+                        </Link>
                       </div>
                     </div>
                   </div>
@@ -792,8 +794,8 @@ contract ZKreditPaymaster is
                           </h4>
                           <div className="space-y-4 text-zinc-400">
                             <p>
-                              The SP1 credit verification is currently under development. 
-                              It will extend the ZKredit validator system with SP1-specific 
+                              The SP1 credit verification is currently under development.
+                              It will extend the ZKredit validator system with SP1-specific
                               proof verification.
                             </p>
                             <p>
@@ -815,13 +817,14 @@ contract ZKreditPaymaster is
                         <ArrowLeft className="h-4 w-4 mr-2" />
                         Back to Paymaster
                       </Button>
-                      <Button
-                        className="bg-gradient-to-r from-violet-600 to-blue-600 hover:from-violet-700 hover:to-blue-700"
-                        onClick={() => setActiveTab("noir-jwt")}
-                      >
-                        Explore Noir JWT Verification{" "}
-                        <ChevronRight className="h-4 w-4 ml-2" />
-                      </Button>
+                      <Link href="/demo/sp1-credit">
+                        <Button
+                          className="bg-gradient-to-r from-violet-600 to-blue-600 hover:from-violet-700 hover:to-blue-700"
+                        >
+                          Explore Credit Line Verification powered by sp1
+                          <ChevronRight className="h-4 w-4 ml-2" />
+                        </Button>
+                      </Link>
                     </div>
                   </div>
                 </TabsContent>
@@ -847,8 +850,8 @@ contract ZKreditPaymaster is
                         Noir JWT Verification Architecture
                       </h3>
                       <p className="text-zinc-400 mb-6">
-                        This implementation uses Noir to verify JWT tokens from 
-                        identity providers like Google, allowing users to prove 
+                        This implementation uses Noir to verify JWT tokens from
+                        identity providers like Google, allowing users to prove
                         organizational membership without revealing personal details.
                       </p>
 
@@ -891,13 +894,13 @@ contract ZKreditPaymaster is
                           </h4>
                           <div className="space-y-4 text-zinc-400">
                             <p>
-                              The Noir JWT verification is under active development. 
-                              It will allow users to generate proofs from their 
+                              The Noir JWT verification is under active development.
+                              It will allow users to generate proofs from their
                               organizational JWT tokens and use these proofs with ZKredit.
                             </p>
                             <p>
-                              This validator will enable corporate treasuries to manage 
-                              spend limits for members without requiring each member to 
+                              This validator will enable corporate treasuries to manage
+                              spend limits for members without requiring each member to
                               have upfront funds.
                             </p>
                           </div>
@@ -914,14 +917,121 @@ contract ZKreditPaymaster is
                         <ArrowLeft className="h-4 w-4 mr-2" />
                         Back to SP1 Credit
                       </Button>
-                      <Button
-                        variant="outline"
-                        className="border-zinc-700 text-white hover:bg-zinc-800"
-                        onClick={() => setActiveTab("base-contract")}
-                      >
-                        Return to Core Contract{" "}
-                        <ChevronRight className="h-4 w-4 ml-2" />
-                      </Button>
+                      <Link href="/demo/jwt-org">
+                        <Button
+                          variant="outline"
+                          className="border-zinc-700 text-white hover:bg-zinc-800"
+                        >
+                          Explore JWT Organization Verification powered by Noir
+                          <ChevronRight className="h-4 w-4 ml-2" />
+                        </Button>
+                      </Link>
+                    </div>
+                  </div>
+                </TabsContent>
+
+                <TabsContent value="zkemail" className="space-y-4">
+                  <div className="border border-zinc-800 rounded-lg p-6 bg-zinc-900/30">
+                    <div className="space-y-2 mb-8">
+                      <h2 className="text-2xl font-bold">
+                        ZKEmail Domain Verification
+                      </h2>
+                      <p className="text-zinc-400">
+                        Verify email ownership with cryptographic certainty without revealing sensitive information from your emails.
+                      </p>
+                      <p className="text-sm text-violet-400 mt-2">
+                        Validator Address: 0x8d7f5ac19e9a1d2d3c0ab0d6457ca6b5873980c1
+                      </p>
+                    </div>
+
+                    <div className="bg-zinc-900 border border-zinc-800 rounded-lg p-6 mb-6">
+                      <h3 className="text-xl font-bold mb-4">
+                        ZKEmail Verification Architecture
+                      </h3>
+                      <p className="text-zinc-400 mb-6">
+                        This implementation uses zero-knowledge proofs to verify email ownership and domain membership without exposing email contents or personal information.
+                      </p>
+
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div className="border border-zinc-800 rounded-lg p-4 bg-zinc-950">
+                          <h4 className="font-bold mb-2 text-violet-400">
+                            Key Features
+                          </h4>
+                          <ul className="space-y-2 text-zinc-400">
+                            <li className="flex items-start gap-2">
+                              <Check className="h-5 w-5 text-green-500 mt-0.5 flex-shrink-0" />
+                              <span>Email domain verification</span>
+                            </li>
+                            <li className="flex items-start gap-2">
+                              <Check className="h-5 w-5 text-green-500 mt-0.5 flex-shrink-0" />
+                              <span>DKIM signature validation</span>
+                            </li>
+                            <li className="flex items-start gap-2">
+                              <Check className="h-5 w-5 text-green-500 mt-0.5 flex-shrink-0" />
+                              <span>Zero-knowledge proof generation</span>
+                            </li>
+                            <li className="flex items-start gap-2">
+                              <Check className="h-5 w-5 text-green-500 mt-0.5 flex-shrink-0" />
+                              <span>Institutional identity linking</span>
+                            </li>
+                          </ul>
+                        </div>
+
+                        <div className="border border-zinc-800 rounded-lg p-4 bg-zinc-950">
+                          <h4 className="font-bold mb-2 text-violet-400">
+                            Verification Flow
+                          </h4>
+                          <ol className="space-y-2 text-zinc-400 list-decimal pl-5">
+                            <li>User receives an email from a specific domain</li>
+                            <li>ZKEmail circuit extracts DKIM signature</li>
+                            <li>Circuit verifies signature against domain's public key</li>
+                            <li>Proof is generated showing valid email ownership</li>
+                            <li>ZKredit contract validates the proof on-chain</li>
+                          </ol>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="bg-zinc-900 border border-zinc-800 rounded-lg p-6">
+                      <h3 className="text-xl font-bold mb-4">Implementation Status</h3>
+                      <div className="bg-zinc-950 p-4 rounded-md mb-4">
+                        <div className="flex items-center gap-2 mb-3">
+                          <div className="h-3 w-3 rounded-full bg-amber-500"></div>
+                          <h4 className="font-bold text-white">
+                            Development in Progress
+                          </h4>
+                        </div>
+                        <div className="space-y-4 text-zinc-400">
+                          <p>
+                            The ZKEmail verification is currently under development.
+                            It will extend the ZKredit validator system with email-specific
+                            proof verification.
+                          </p>
+                          <p>
+                            This validator will enable users to prove their membership in an organization
+                            or ownership of an email domain without revealing email contents or personal information.
+                          </p>
+                        </div>
+                      </div>
+
+                      <div className="flex flex-col sm:flex-row gap-4 mt-8">
+                        <Button
+                          variant="outline"
+                          className="border-zinc-700 text-white hover:bg-zinc-800"
+                          onClick={() => setActiveTab("noir-jwt")}
+                        >
+                          <ArrowLeft className="h-4 w-4 mr-2" />
+                          Back to Noir JWT
+                        </Button>
+                        <Link href="/demo/zkemail">
+                          <Button
+                            className="bg-gradient-to-r from-violet-600 to-blue-600 hover:from-violet-700 hover:to-blue-700"
+                          >
+                            Explore Email Domain Verification
+                            <ChevronRight className="h-4 w-4 ml-2" />
+                          </Button>
+                        </Link>
+                      </div>
                     </div>
                   </div>
                 </TabsContent>

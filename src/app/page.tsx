@@ -382,110 +382,122 @@ export default function LandingPage() {
               viewport={{ once: true, amount: 0.3 }}
             >
               <motion.div variants={fadeIn} custom={0}>
-                <Card className="bg-zinc-900 border-zinc-800 hover:border-violet-500/50 transition-all duration-300 hover:-translate-y-1 h-full flex flex-col">
-                  <CardHeader>
-                    <Database className="h-10 w-10 text-violet-500 mb-2" />
-                    <CardTitle className="text-white">
-                      SP1 Credit Verification
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent className="text-zinc-400">
-                    <p>
-                      Prove your borrowing capacity without revealing sensitive
-                      financial information. Our SP1 circuit verifies credit
-                      lines while keeping your financial details private.
-                    </p>
-                  </CardContent>
-                </Card>
+                <Link href="/demo#sp1-credit-tab" className="block h-full">
+                  <Card className="bg-zinc-900 border-zinc-800 hover:border-violet-500/50 transition-all duration-300 hover:-translate-y-1 h-full flex flex-col">
+                    <CardHeader>
+                      <Database className="h-10 w-10 text-violet-500 mb-2" />
+                      <CardTitle className="text-white">
+                        SP1 Credit Verification
+                      </CardTitle>
+                    </CardHeader>
+                    <CardContent className="text-zinc-400">
+                      <p>
+                        Prove your borrowing capacity without revealing sensitive
+                        financial information. Our SP1 circuit verifies credit
+                        lines while keeping your financial details private.
+                      </p>
+                    </CardContent>
+                  </Card>
+                </Link>
               </motion.div>
 
               <motion.div variants={fadeIn} custom={1}>
-                <Card className="bg-zinc-900 border-zinc-800 hover:border-violet-500/50 transition-all duration-300 hover:-translate-y-1 h-full flex flex-col">
-                  <CardHeader>
-                    <Users className="h-10 w-10 text-violet-500 mb-2" />
-                    <CardTitle className="text-white">
-                      Noir JWT Organization Verification
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent className="text-zinc-400 flex-grow">
-                    <p>
-                      Prove membership in a Google Workspace group without
-                      revealing personal details. Perfect for company-wide
-                      spending accounts.
-                    </p>
-                  </CardContent>
-                </Card>
+                <Link href="/demo#noir-jwt-tab" className="block h-full">
+                  <Card className="bg-zinc-900 border-zinc-800 hover:border-violet-500/50 transition-all duration-300 hover:-translate-y-1 h-full flex flex-col">
+                    <CardHeader>
+                      <Users className="h-10 w-10 text-violet-500 mb-2" />
+                      <CardTitle className="text-white">
+                        Noir JWT Organization Verification
+                      </CardTitle>
+                    </CardHeader>
+                    <CardContent className="text-zinc-400 flex-grow">
+                      <p>
+                        Prove membership in a Google Workspace group without
+                        revealing personal details. Perfect for company-wide
+                        spending accounts.
+                      </p>
+                    </CardContent>
+                  </Card>
+                </Link>
               </motion.div>
 
               <motion.div variants={fadeIn} custom={2}>
-                <Card className="bg-zinc-900 border-zinc-800 hover:border-violet-500/50 transition-all duration-300 hover:-translate-y-1 h-full flex flex-col">
-                  <CardHeader>
-                    <Mail className="h-10 w-10 text-violet-500 mb-2" />
-                    <CardTitle className="text-white">
-                      ZKEmail Domain Verification
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent className="text-zinc-400 flex-grow">
-                    <p>
-                      Verify email ownership with cryptographic certainty. Great
-                      for linking institutional identities to on-chain actions.
-                    </p>
-                  </CardContent>
-                </Card>
+                <Link href="/demo#zkemail-tab" className="block h-full">
+                  <Card className="bg-zinc-900 border-zinc-800 hover:border-violet-500/50 transition-all duration-300 hover:-translate-y-1 h-full flex flex-col">
+                    <CardHeader>
+                      <Mail className="h-10 w-10 text-violet-500 mb-2" />
+                      <CardTitle className="text-white">
+                        ZKEmail Domain Verification
+                      </CardTitle>
+                    </CardHeader>
+                    <CardContent className="text-zinc-400 flex-grow">
+                      <p>
+                        Verify email ownership with cryptographic certainty. Great
+                        for linking institutional identities to on-chain actions.
+                      </p>
+                    </CardContent>
+                  </Card>
+                </Link>
               </motion.div>
 
               <motion.div variants={fadeIn} custom={3}>
-                <Card className="bg-zinc-900 border-zinc-800 hover:border-violet-500/50 transition-all duration-300 hover:-translate-y-1 h-full flex flex-col">
-                  <CardHeader>
-                    <Building className="h-10 w-10 text-violet-500 mb-2" />
-                    <CardTitle className="text-white">
-                      CEX &quot;Trust-Us&quot; Verification
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent className="text-zinc-400 flex-grow">
-                    <p>
-                      Use assets held in centralized exchanges without
-                      withdrawing first. The exchange verifies your ownership
-                      and approves transactions.
-                    </p>
-                  </CardContent>
-                </Card>
+                <Link href="/demo" className="block h-full">
+                  <Card className="bg-zinc-900 border-zinc-800 hover:border-violet-500/50 transition-all duration-300 hover:-translate-y-1 h-full flex flex-col">
+                    <CardHeader>
+                      <Building className="h-10 w-10 text-violet-500 mb-2" />
+                      <CardTitle className="text-white">
+                        CEX &quot;Trust-Us&quot; Verification
+                      </CardTitle>
+                    </CardHeader>
+                    <CardContent className="text-zinc-400 flex-grow">
+                      <p>
+                        Use assets held in centralized exchanges without
+                        withdrawing first. The exchange verifies your ownership
+                        and approves transactions.
+                      </p>
+                    </CardContent>
+                  </Card>
+                </Link>
               </motion.div>
 
               <motion.div variants={fadeIn} custom={4}>
-                <Card className="bg-zinc-900 border-zinc-800 hover:border-violet-500/50 transition-all duration-300 hover:-translate-y-1 h-full flex flex-col">
-                  <CardHeader>
-                    <Key className="h-10 w-10 text-violet-500 mb-2" />
-                    <CardTitle className="text-white">
-                      Registry-Based Delegation
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent className="text-zinc-400 flex-grow">
-                    <p>
-                      Create sub-wallets with custom spending limits and asset
-                      restrictions. Perfect for team management and controlled
-                      delegation.
-                    </p>
-                  </CardContent>
-                </Card>
+                <Link href="/demo#registry-tab" className="block h-full">
+                  <Card className="bg-zinc-900 border-zinc-800 hover:border-violet-500/50 transition-all duration-300 hover:-translate-y-1 h-full flex flex-col">
+                    <CardHeader>
+                      <Key className="h-10 w-10 text-violet-500 mb-2" />
+                      <CardTitle className="text-white">
+                        Registry-Based Delegation
+                      </CardTitle>
+                    </CardHeader>
+                    <CardContent className="text-zinc-400 flex-grow">
+                      <p>
+                        Create sub-wallets with custom spending limits and asset
+                        restrictions. Perfect for team management and controlled
+                        delegation.
+                      </p>
+                    </CardContent>
+                  </Card>
+                </Link>
               </motion.div>
 
               <motion.div variants={fadeIn} custom={5}>
-                <Card className="bg-zinc-900 border-zinc-800 hover:border-violet-500/50 transition-all duration-300 hover:-translate-y-1 h-full flex flex-col">
-                  <CardHeader>
-                    <Wallet className="h-10 w-10 text-violet-500 mb-2" />
-                    <CardTitle className="text-white">
-                      Default Spending
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent className="text-zinc-400 flex-grow">
-                    <p>
-                      Skip transfers completely and use funds directly from the
-                      owner of Account Abstraction wallets. Simplifies
-                      operations while maintaining security.
-                    </p>
-                  </CardContent>
-                </Card>
+                <Link href="/demo#default-validator-tab" className="block h-full">
+                  <Card className="bg-zinc-900 border-zinc-800 hover:border-violet-500/50 transition-all duration-300 hover:-translate-y-1 h-full flex flex-col">
+                    <CardHeader>
+                      <Wallet className="h-10 w-10 text-violet-500 mb-2" />
+                      <CardTitle className="text-white">
+                        Default Spending
+                      </CardTitle>
+                    </CardHeader>
+                    <CardContent className="text-zinc-400 flex-grow">
+                      <p>
+                        Skip transfers completely and use funds directly from the
+                        owner of Account Abstraction wallets. Simplifies
+                        operations while maintaining security.
+                      </p>
+                    </CardContent>
+                  </Card>
+                </Link>
               </motion.div>
             </motion.div>
           </div>

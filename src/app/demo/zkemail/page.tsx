@@ -181,7 +181,7 @@ export default function ZKEmailVerificationPage() {
                           <div className="bg-zinc-800/50 p-4 rounded-lg">
                             <h4 className="font-semibold mb-2 text-violet-400">How This Works</h4>
                             <p className="text-zinc-400 text-sm">
-                              We&apos;ll send a verification email to your institutional address. Once verified, we'll
+                              We&apos;ll send a verification email to your institutional address. Once verified, we&apos;ll
                               generate a zero-knowledge proof of your email ownership without revealing your actual
                               email address on-chain.
                             </p>
