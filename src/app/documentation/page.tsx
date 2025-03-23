@@ -100,7 +100,7 @@ export default function DocumentationPage() {
                       >
                         <div className="flex items-center gap-2">
                           <Shield className="h-4 w-4" />
-                          <span>Verified Contracts</span>
+                          <span>Deployed Contracts</span>
                         </div>
                       </TabsTrigger>
                       <TabsTrigger
@@ -153,57 +153,17 @@ export default function DocumentationPage() {
                           <h4 className="text-lg font-semibold mt-6">
                             Installation
                           </h4>
-                          <div className="bg-zinc-950 p-4 rounded-md font-mono text-sm">
-                            npm install @zkredit/sdk
-                          </div>
-
-                          <h4 className="text-lg font-semibold mt-6">
-                            Quick Start
-                          </h4>
-                          <p className="text-zinc-400 mb-4">
-                            Here&apos;s a simple example of how to initialize the
-                            ZKredit SDK and connect assets:
-                          </p>
-                          <div className="bg-zinc-950 p-4 rounded-md font-mono text-sm whitespace-pre overflow-x-auto">
-                            {`import { ZKredit } from '@zkredit/sdk';
-
-// Initialize ZKredit client
-const zkredit = new ZKredit({
-apiKey: 'YOUR_API_KEY',
-environment: 'testnet', // or 'mainnet'
-});
-
-// Connect a wallet
-const connectWallet = async () => {
-try {
-  const connection = await zkredit.connect.wallet({
-    provider: window.ethereum,
-  });
-  
-  console.log('Connected wallet:', connection.address);
-  return connection;
-} catch (error) {
-  console.error('Failed to connect wallet:', error);
-}
-};
-
-// Generate a ZK proof
-const generateProof = async (connection) => {
-try {
-  const proof = await zkredit.proofs.generate({
-    connection,
-    assetTypes: ['ETH', 'ERC20'],
-    thresholds: {
-      minimum: '1000', // minimum value in USD
-    },
-  });
-  
-  console.log('Generated proof:', proof.id);
-  return proof;
-} catch (error) {
-  console.error('Failed to generate proof:', error);
-}
-};`}
+                          <div className="flex flex-col items-center justify-center py-12 text-center">
+                            <Terminal className="h-16 w-16 text-violet-500 mb-4" />
+                            <h3 className="text-xl font-bold mb-2">
+                              SDK Coming Soon
+                            </h3>
+                            <p className="text-zinc-400 max-w-md mb-6">
+                              Our SDK is currently in development. Join our waitlist to be notified when it&apos;s available.
+                            </p>
+                            <Button className="bg-gradient-to-r from-violet-600 to-blue-600 hover:from-violet-700 hover:to-blue-700">
+                              Join Waitlist
+                            </Button>
                           </div>
                         </div>
                       </div>
@@ -351,12 +311,10 @@ try {
                           <div className="flex flex-col items-center justify-center py-12 text-center">
                             <Terminal className="h-16 w-16 text-violet-500 mb-4" />
                             <h3 className="text-xl font-bold mb-2">
-                              SDK Documentation Coming Soon
+                              SDK Coming Soon
                             </h3>
                             <p className="text-zinc-400 max-w-md mb-6">
-                              Our SDK documentation is currently in development.
-                              Join our waitlist to be notified when it&apos;s
-                              available.
+                              Our SDK is currently in development. Join our waitlist to be notified when it&apos;s available.
                             </p>
                             <Button className="bg-gradient-to-r from-violet-600 to-blue-600 hover:from-violet-700 hover:to-blue-700">
                               Join Waitlist
@@ -490,40 +448,37 @@ try {
                     <div className="space-y-8">
                       <div>
                         <h2 className="text-2xl font-bold mb-4">
-                          Verified Contracts
+                          Deployed Contracts
                         </h2>
                         <div className="border border-zinc-800 rounded-lg p-6 bg-zinc-900/30">
                           <p className="text-zinc-400 mb-6">
-                            All ZKredit smart contracts are verified on
-                            blockchain explorers and audited by leading security
-                            firms.
+                            The following contracts have been deployed on the Ethereum Sepolia testnet only.
+                            Currently, ZKredit only supports Sepolia for testing and integration.
                           </p>
 
                           <div className="space-y-4">
                             <div className="border border-zinc-800 rounded-lg p-4 bg-zinc-950">
                               <div className="flex justify-between items-center mb-2">
                                 <h3 className="font-bold text-violet-400">
-                                  ZKredit Core
+                                  ZKredit Registry
                                 </h3>
                                 <div className="flex items-center gap-2">
-                                  <span className="px-2 py-1 bg-green-900/30 text-green-400 text-xs rounded-full">
-                                    Audited
-                                  </span>
                                   <span className="px-2 py-1 bg-blue-900/30 text-blue-400 text-xs rounded-full">
-                                    Verified
+                                    Sepolia
                                   </span>
                                 </div>
                               </div>
                               <p className="text-zinc-400 text-sm mb-2">
-                                Main contract for the ZKredit protocol
+                                Registry contract for validator management and depositor registration
                               </p>
                               <div className="flex items-center gap-2 text-sm text-zinc-500">
-                                <span>Ethereum:</span>
-                                <code className="font-mono">0x71C...F29E</code>
-                                <Button
-                                  variant="ghost"
-                                  size="sm"
-                                  className="h-6 px-2 text-zinc-400"
+                                <span>Address:</span>
+                                <code className="font-mono">0x4b2c79367e640f537e823cb14683256a5de4cf83</code>
+                                <a 
+                                  href="https://sepolia.etherscan.io/address/0x4b2c79367e640f537e823cb14683256a5de4cf83"
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  className="text-violet-400 hover:text-violet-300"
                                 >
                                   <svg
                                     xmlns="http://www.w3.org/2000/svg"
@@ -536,45 +491,36 @@ try {
                                     strokeLinecap="round"
                                     strokeLinejoin="round"
                                   >
-                                    <rect
-                                      x="9"
-                                      y="9"
-                                      width="13"
-                                      height="13"
-                                      rx="2"
-                                      ry="2"
-                                    ></rect>
-                                    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                                    <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+                                    <polyline points="15 3 21 3 21 9"></polyline>
+                                    <line x1="10" y1="14" x2="21" y2="3"></line>
                                   </svg>
-                                </Button>
+                                </a>
                               </div>
                             </div>
 
                             <div className="border border-zinc-800 rounded-lg p-4 bg-zinc-950">
                               <div className="flex justify-between items-center mb-2">
                                 <h3 className="font-bold text-violet-400">
-                                  ZKredit Registry
+                                  Default Validator
                                 </h3>
                                 <div className="flex items-center gap-2">
-                                  <span className="px-2 py-1 bg-green-900/30 text-green-400 text-xs rounded-full">
-                                    Audited
-                                  </span>
                                   <span className="px-2 py-1 bg-blue-900/30 text-blue-400 text-xs rounded-full">
-                                    Verified
+                                    Sepolia
                                   </span>
                                 </div>
                               </div>
                               <p className="text-zinc-400 text-sm mb-2">
-                                Registry contract for granular control over
-                                token access
+                                Default validator implementation for signature verification
                               </p>
                               <div className="flex items-center gap-2 text-sm text-zinc-500">
-                                <span>Ethereum:</span>
-                                <code className="font-mono">0x82D...A37B</code>
-                                <Button
-                                  variant="ghost"
-                                  size="sm"
-                                  className="h-6 px-2 text-zinc-400"
+                                <span>Address:</span>
+                                <code className="font-mono">0x817c41d4dd5bca085f31251da0c5d086fd9cc6e8</code>
+                                <a 
+                                  href="https://sepolia.etherscan.io/address/0x817c41d4dd5bca085f31251da0c5d086fd9cc6e8"
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  className="text-violet-400 hover:text-violet-300"
                                 >
                                   <svg
                                     xmlns="http://www.w3.org/2000/svg"
@@ -587,17 +533,11 @@ try {
                                     strokeLinecap="round"
                                     strokeLinejoin="round"
                                   >
-                                    <rect
-                                      x="9"
-                                      y="9"
-                                      width="13"
-                                      height="13"
-                                      rx="2"
-                                      ry="2"
-                                    ></rect>
-                                    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                                    <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+                                    <polyline points="15 3 21 3 21 9"></polyline>
+                                    <line x1="10" y1="14" x2="21" y2="3"></line>
                                   </svg>
-                                </Button>
+                                </a>
                               </div>
                             </div>
 
@@ -607,11 +547,8 @@ try {
                                   SP1 Credit Verifier
                                 </h3>
                                 <div className="flex items-center gap-2">
-                                  <span className="px-2 py-1 bg-green-900/30 text-green-400 text-xs rounded-full">
-                                    Audited
-                                  </span>
                                   <span className="px-2 py-1 bg-blue-900/30 text-blue-400 text-xs rounded-full">
-                                    Verified
+                                    Sepolia
                                   </span>
                                 </div>
                               </div>
@@ -620,12 +557,13 @@ try {
                                 proofs
                               </p>
                               <div className="flex items-center gap-2 text-sm text-zinc-500">
-                                <span>Ethereum:</span>
-                                <code className="font-mono">0x93F...E45C</code>
-                                <Button
-                                  variant="ghost"
-                                  size="sm"
-                                  className="h-6 px-2 text-zinc-400"
+                                <span>Address:</span>
+                                <code className="font-mono">Coming Soon</code>
+                                <a 
+                                  href="https://sepolia.etherscan.io/"
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  className="text-violet-400 hover:text-violet-300"
                                 >
                                   <svg
                                     xmlns="http://www.w3.org/2000/svg"
@@ -638,17 +576,11 @@ try {
                                     strokeLinecap="round"
                                     strokeLinejoin="round"
                                   >
-                                    <rect
-                                      x="9"
-                                      y="9"
-                                      width="13"
-                                      height="13"
-                                      rx="2"
-                                      ry="2"
-                                    ></rect>
-                                    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                                    <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+                                    <polyline points="15 3 21 3 21 9"></polyline>
+                                    <line x1="10" y1="14" x2="21" y2="3"></line>
                                   </svg>
-                                </Button>
+                                </a>
                               </div>
                             </div>
 
@@ -658,11 +590,8 @@ try {
                                   Noir JWT Verifier
                                 </h3>
                                 <div className="flex items-center gap-2">
-                                  <span className="px-2 py-1 bg-green-900/30 text-green-400 text-xs rounded-full">
-                                    Audited
-                                  </span>
                                   <span className="px-2 py-1 bg-blue-900/30 text-blue-400 text-xs rounded-full">
-                                    Verified
+                                    Sepolia
                                   </span>
                                 </div>
                               </div>
@@ -671,12 +600,13 @@ try {
                                 circuits
                               </p>
                               <div className="flex items-center gap-2 text-sm text-zinc-500">
-                                <span>Ethereum:</span>
-                                <code className="font-mono">0x45D...B28A</code>
-                                <Button
-                                  variant="ghost"
-                                  size="sm"
-                                  className="h-6 px-2 text-zinc-400"
+                                <span>Address:</span>
+                                <code className="font-mono">Coming Soon</code>
+                                <a 
+                                  href="https://sepolia.etherscan.io/"
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  className="text-violet-400 hover:text-violet-300"
                                 >
                                   <svg
                                     xmlns="http://www.w3.org/2000/svg"
@@ -689,24 +619,77 @@ try {
                                     strokeLinecap="round"
                                     strokeLinejoin="round"
                                   >
-                                    <rect
-                                      x="9"
-                                      y="9"
-                                      width="13"
-                                      height="13"
-                                      rx="2"
-                                      ry="2"
-                                    ></rect>
-                                    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                                    <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+                                    <polyline points="15 3 21 3 21 9"></polyline>
+                                    <line x1="10" y1="14" x2="21" y2="3"></line>
                                   </svg>
-                                </Button>
+                                </a>
                               </div>
                             </div>
                           </div>
 
-                          <Button className="mt-6 bg-gradient-to-r from-violet-600 to-blue-600 hover:from-violet-700 hover:to-blue-700">
-                            View All Contracts
-                          </Button>
+                          <h3 className="text-xl font-bold mt-8">
+                            How to Interact with Contracts
+                          </h3>
+                          <p className="text-zinc-400 mt-4">
+                            You can interact with these contracts using our dashboard or directly through ethers.js/viem:
+                          </p>
+
+                          <div className="bg-zinc-950 p-4 rounded-md font-mono text-sm mt-4 whitespace-pre overflow-x-auto">
+{`import { createPublicClient, http, parseEther } from 'viem';
+import { sepolia } from 'viem/chains';
+import { privateKeyToAccount } from 'viem/accounts';
+
+// Contract ABIs and addresses
+import DefaultValidatorABI from '@/lib/abi/DefaultValidator.json';
+import { contractAddresses } from '@/lib/config/contracts';
+
+// Create a client
+const client = createPublicClient({
+  chain: sepolia,  // Currently only Sepolia is supported
+  transport: http()
+});
+
+// Example: Check if a signer is authorized
+const checkAuthorizedSigner = async (signerAddress) => {
+  const isAuthorized = await client.readContract({
+    address: contractAddresses[11155111].DefaultValidator,
+    abi: DefaultValidatorABI,
+    functionName: 'authorizedSigners',
+    args: [signerAddress]
+  });
+  
+  return isAuthorized;
+};
+
+// Example: Get the owner of the validator contract
+const getValidatorOwner = async () => {
+  const owner = await client.readContract({
+    address: contractAddresses[11155111].DefaultValidator,
+    abi: DefaultValidatorABI,
+    functionName: 'owner'
+  });
+  
+  return owner;
+};`}
+                          </div>
+
+                          <div className="mt-6 flex gap-4">
+                            <Link href="/dashboard">
+                              <Button className="bg-gradient-to-r from-violet-600 to-blue-600 hover:from-violet-700 hover:to-blue-700">
+                                Try the Interactive Dashboard
+                              </Button>
+                            </Link>
+                            <a 
+                              href="https://github.com/mikelxc/zkredit-fe" 
+                              target="_blank"
+                              rel="noopener noreferrer"
+                            >
+                              <Button variant="outline" className="border-zinc-700 hover:bg-zinc-800">
+                                View Source Code
+                              </Button>
+                            </a>
+                          </div>
                         </div>
                       </div>
                     </div>
