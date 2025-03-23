@@ -30,7 +30,6 @@ export default function JWTOrgVerificationPage() {
 
     // Simulate login and JWT verification
     setTimeout(() => {
-      setLoggedIn(true)
       setOrganization("Acme Corporation")
       setDepartment("Engineering")
       setLoading(false)
@@ -43,7 +42,6 @@ export default function JWTOrgVerificationPage() {
 
     // Simulate wallet creation
     setTimeout(() => {
-      setWalletCreated(true)
       setWalletAddress("0x71C...F29E")
       setLoading(false)
       setStep(3)
@@ -62,8 +60,6 @@ export default function JWTOrgVerificationPage() {
 
   const resetDemo = () => {
     setStep(1)
-    setLoggedIn(false)
-    setWalletCreated(false)
     setTransactionCompleted(false)
     setEmail("")
     setPassword("")

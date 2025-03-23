@@ -21,12 +21,11 @@ export default function CEXTrustVerificationPage() {
   const [selectedChain, setSelectedChain] = useState("ethereum")
   const [transactionAmount, setTransactionAmount] = useState(1000)
 
-  const connectCEX = (exchange) => {
+  const connectCEX = (exchange:string) => {
     setLoading(true)
 
     // Simulate CEX connection
     setTimeout(() => {
-      setCexConnected(true)
       setCexName(exchange)
       setCexBalance(exchange === "Binance" ? 25000 : exchange === "Coinbase" ? 15000 : 10000)
       setLoading(false)
@@ -39,7 +38,6 @@ export default function CEXTrustVerificationPage() {
 
     // Simulate proof generation
     setTimeout(() => {
-      setProofGenerated(true)
       setStep(3)
       setLoading(false)
     }, 2000)
@@ -57,10 +55,8 @@ export default function CEXTrustVerificationPage() {
 
   const resetDemo = () => {
     setStep(1)
-    setCexConnected(false)
     setCexName("")
     setCexBalance(0)
-    setProofGenerated(false)
     setTransactionCompleted(false)
   }
 

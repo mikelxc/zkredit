@@ -41,7 +41,6 @@ export default function ZKEmailVerificationPage() {
 
     // Simulate email verification
     setTimeout(() => {
-      setEmailVerified(true)
       setStep(2)
       setLoading(false)
     }, 1500)
@@ -52,7 +51,6 @@ export default function ZKEmailVerificationPage() {
 
     // Simulate proof generation
     setTimeout(() => {
-      setProofGenerated(true)
       setStep(3)
       setLoading(false)
     }, 2000)
@@ -73,8 +71,6 @@ export default function ZKEmailVerificationPage() {
     setEmail("")
     setVerificationCode("")
     setVerificationSent(false)
-    setEmailVerified(false)
-    setProofGenerated(false)
     setTransactionCompleted(false)
   }
 
