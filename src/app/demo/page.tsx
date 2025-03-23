@@ -1,24 +1,9 @@
 "use client";
-
 import { useState } from "react";
+import { ArrowLeft, ChevronRight, Check } from "lucide-react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import {
-  Shield,
-  ArrowLeft,
-  Check,
-  ChevronRight,
-  Code,
-  Network,
-} from "lucide-react";
 import Navbar from "@/components/navbar";
 import PageTransition from "@/components/page-transition";
 
@@ -59,26 +44,26 @@ export default function DemoPage() {
                 className="w-full"
               >
                 <TabsList className="grid w-full max-w-4xl grid-cols-6 mb-8">
-                  <TabsTrigger value="base-contract">Base Contract</TabsTrigger>
+                  <TabsTrigger value="base-contract">Core Contract</TabsTrigger>
                   <TabsTrigger value="registry">Registry</TabsTrigger>
-                  <TabsTrigger value="cex-trust">CEX &quot;Trust-Us&quot;</TabsTrigger>
+                  <TabsTrigger value="default-validator">Default Validator</TabsTrigger>
+                  <TabsTrigger value="paymaster">Paymaster</TabsTrigger>
                   <TabsTrigger value="sp1-credit">SP1 Credit</TabsTrigger>
                   <TabsTrigger value="noir-jwt">Noir JWT</TabsTrigger>
-                  <TabsTrigger value="default-spending">
-                    Default Spending
-                  </TabsTrigger>
                 </TabsList>
 
                 <TabsContent value="base-contract" className="space-y-4">
                   <div className="border border-zinc-800 rounded-lg p-6 bg-zinc-900/30">
                     <div className="space-y-2 mb-8">
                       <h2 className="text-2xl font-bold">
-                        Base ZKredit Contract
+                        ZKredit Core Contract
                       </h2>
                       <p className="text-zinc-400">
-                        The foundation of ZKredit is a smart contract that
-                        allows deposits and withdrawals with validator
-                        signatures.
+                        The foundation of ZKredit is a smart contract that handles deposits, withdrawals, 
+                        and validates operations through a registry of validators.
+                      </p>
+                      <p className="text-sm text-violet-400 mt-2">
+                        Deployed at: 0x4d967ae3e0ccb462582b46891d92f0d7efe5e522
                       </p>
                     </div>
 
@@ -87,8 +72,8 @@ export default function DemoPage() {
                         Contract Architecture
                       </h3>
                       <p className="text-zinc-400 mb-6">
-                        The base contract implements a registry of potential
-                        valid signatures that can authorize asset withdrawals.
+                        ZKreditCore implements a robust system for asset handling with validator-based 
+                        approval flow, ERC-4337 compatibility, and upgradability.
                       </p>
 
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -99,22 +84,21 @@ export default function DemoPage() {
                           <ul className="space-y-2 text-zinc-400">
                             <li className="flex items-start gap-2">
                               <Check className="h-5 w-5 text-green-500 mt-0.5 flex-shrink-0" />
-                              <span>Registry of valid signature sources</span>
+                              <span>Deposits for ETH and ERC20 tokens</span>
                             </li>
                             <li className="flex items-start gap-2">
                               <Check className="h-5 w-5 text-green-500 mt-0.5 flex-shrink-0" />
                               <span>
-                                Fallback to self-verification for direct
-                                withdrawals
+                                Validator-based approval system
                               </span>
                             </li>
                             <li className="flex items-start gap-2">
                               <Check className="h-5 w-5 text-green-500 mt-0.5 flex-shrink-0" />
-                              <span>Support for both ETH and ERC20 tokens</span>
+                              <span>ERC-4337 account abstraction integration</span>
                             </li>
                             <li className="flex items-start gap-2">
                               <Check className="h-5 w-5 text-green-500 mt-0.5 flex-shrink-0" />
-                              <span>Expandable validation interface</span>
+                              <span>UUPS upgradable contract architecture</span>
                             </li>
                           </ul>
                         </div>
@@ -126,14 +110,12 @@ export default function DemoPage() {
                           <ol className="space-y-2 text-zinc-400 list-decimal pl-5">
                             <li>User deposits assets (ETH or ERC20 tokens)</li>
                             <li>Assets are locked in the contract</li>
-                            <li>Withdrawal requires a valid signature</li>
+                            <li>Withdrawal requires validation (user or validator)</li>
                             <li>
-                              Signature can come from the user or a registered
-                              validator
+                              Validator evaluates withdrawal requests
                             </li>
                             <li>
-                              Contract verifies the signature before releasing
-                              funds
+                              Contract completes transfer to recipient
                             </li>
                           </ol>
                         </div>
@@ -145,42 +127,69 @@ export default function DemoPage() {
                       <div className="bg-zinc-950 p-4 rounded-md font-mono text-sm overflow-x-auto mb-4">
                         <pre className="text-zinc-400">
                           {`// SPDX-License-Identifier: MIT
-pragma solidity ^0.8.20;
+pragma solidity ^0.8.29;
 
-contract ZKredit {
-    // Mapping of registered validators
-    mapping(address => bool) public validators;
-    
-    // Mapping of user balances: user => token => amount
-    mapping(address => mapping(address => uint256)) public balances;
-    
-    // Withdraw assets with validator signature
-    function withdraw(
-        address token, 
-        uint256 amount, 
-        address validator, 
-        bytes calldata signature
-    ) external {
-        // If validator is not registered, check if it's the user's own address
-        if (!validators[validator]) {
-            require(validator == msg.sender, "Invalid validator");
-            // No signature verification needed for self-withdrawals
-        } else {
-            // Verify signature from registered validator
-            bytes32 messageHash = keccak256(abi.encodePacked(
-                msg.sender,
-                token,
-                amount,
-                block.chainid,
-                address(this)
-            ));
-            
-            // Verify signature...
-        }
-        
-        // Transfer assets...
+contract ZKreditCore is
+    IZKreditCore,
+    Initializable,
+    UUPSUpgradeable,
+    OwnableUpgradeable
+{
+    // Balances mapping (depositor => token => amount)
+    mapping(address => mapping(address => uint256)) private _balances;
+
+    // Deposit ETH
+    function depositNative(
+        address depositor
+    ) external payable override whenNotPaused {
+        require(
+            msg.value > 0,
+            "ZKreditCore: deposit amount must be greater than zero"
+        );
+
+        // Update balance
+        _balances[depositor][address(0)] += msg.value;
+
+        emit Deposited(msg.sender, depositor, address(0), msg.value);
     }
-}`}
+
+    // Withdraw ETH
+    function withdrawNative(
+        address depositor,
+        uint256 amount,
+        address payable recipient,
+        bytes calldata validationData
+    ) external override nonReentrant whenNotPaused {
+        require(
+            amount > 0,
+            "ZKreditCore: withdraw amount must be greater than zero"
+        );
+        require(
+            _balances[depositor][address(0)] >= amount,
+            "ZKreditCore: insufficient balance"
+        );
+
+        // Validate withdrawal
+        require(
+            _validateWithdrawal(
+                msg.sender,
+                depositor,
+                address(0),
+                amount,
+                validationData
+            ),
+            "ZKreditCore: withdrawal validation failed"
+        );
+
+        // Update balance
+        _balances[depositor][address(0)] -= amount;
+
+        // Transfer ETH to recipient
+        (bool success, ) = recipient.call{value: amount}("");
+        require(success, "ZKreditCore: native transfer failed");
+
+        emit Withdrawn(msg.sender, depositor, address(0), recipient, amount);
+    }`}
                         </pre>
                       </div>
 
@@ -199,12 +208,14 @@ contract ZKredit {
                   <div className="border border-zinc-800 rounded-lg p-6 bg-zinc-900/30">
                     <div className="space-y-2 mb-8">
                       <h2 className="text-2xl font-bold">
-                        Registry-Based Delegation
+                        ZKredit Registry
                       </h2>
                       <p className="text-zinc-400">
-                        Create sub-wallets with custom spending limits and asset
-                        restrictions for team management and controlled
-                        delegation.
+                        Registry contract that manages depositors and their associated validators,
+                        enabling granular control over validator access.
+                      </p>
+                      <p className="text-sm text-violet-400 mt-2">
+                        Deployed at: 0x4b2c79367e640f537e823cb14683256a5de4cf83
                       </p>
                     </div>
 
@@ -213,9 +224,8 @@ contract ZKredit {
                         Registry Architecture
                       </h3>
                       <p className="text-zinc-400 mb-6">
-                        The registry contract provides granular control over
-                        which accounts have access to which tokens, with
-                        customizable spending limits.
+                        The registry contract provides a directory of depositors, associating them with
+                        specific validators that control access to their funds.
                       </p>
 
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -227,23 +237,23 @@ contract ZKredit {
                             <li className="flex items-start gap-2">
                               <Check className="h-5 w-5 text-green-500 mt-0.5 flex-shrink-0" />
                               <span>
-                                Create sub-wallets with custom permissions
+                                Register depositors with validators
                               </span>
                             </li>
                             <li className="flex items-start gap-2">
                               <Check className="h-5 w-5 text-green-500 mt-0.5 flex-shrink-0" />
                               <span>
-                                Set spending limits per token and sub-wallet
+                                Assign managers to validators
                               </span>
                             </li>
                             <li className="flex items-start gap-2">
                               <Check className="h-5 w-5 text-green-500 mt-0.5 flex-shrink-0" />
-                              <span>Track spending against limits</span>
+                              <span>Control depositor active status</span>
                             </li>
                             <li className="flex items-start gap-2">
                               <Check className="h-5 w-5 text-green-500 mt-0.5 flex-shrink-0" />
                               <span>
-                                Reset spending periods (e.g., monthly)
+                                Store custom metadata per depositor
                               </span>
                             </li>
                           </ul>
@@ -257,25 +267,25 @@ contract ZKredit {
                             <li className="flex items-start gap-2">
                               <Check className="h-5 w-5 text-green-500 mt-0.5 flex-shrink-0" />
                               <span>
-                                Company expense accounts with monthly limits
+                                Organizations with multiple validators
                               </span>
                             </li>
                             <li className="flex items-start gap-2">
                               <Check className="h-5 w-5 text-green-500 mt-0.5 flex-shrink-0" />
                               <span>
-                                Team budgets with restricted token access
+                                Delegated management of validators
                               </span>
                             </li>
                             <li className="flex items-start gap-2">
                               <Check className="h-5 w-5 text-green-500 mt-0.5 flex-shrink-0" />
                               <span>
-                                Delegated spending for specific projects
+                                Tracking active vs. inactive depositors
                               </span>
                             </li>
                             <li className="flex items-start gap-2">
                               <Check className="h-5 w-5 text-green-500 mt-0.5 flex-shrink-0" />
                               <span>
-                                Controlled access to organizational funds
+                                Batch operations for efficient management
                               </span>
                             </li>
                           </ul>
@@ -288,42 +298,69 @@ contract ZKredit {
                       <div className="bg-zinc-950 p-4 rounded-md font-mono text-sm overflow-x-auto mb-4">
                         <pre className="text-zinc-400">
                           {`// SPDX-License-Identifier: MIT
-pragma solidity ^0.8.20;
+pragma solidity ^0.8.29;
 
-contract ZKreditRegistry {
-    // Main ZKredit contract
-    IZKredit public zkredit;
-    
-    // Mapping of sub-wallets: owner => sub-wallet => token => allowed
-    mapping(address => mapping(address => mapping(address => bool))) public allowances;
-    
-    // Mapping of sub-wallet spending limits: owner => sub-wallet => token => limit
-    mapping(address => mapping(address => mapping(address => uint256))) public spendingLimits;
-    
-    // Mapping of sub-wallet spent amounts: owner => sub-wallet => token => spent
-    mapping(address => mapping(address => mapping(address => uint256))) public spentAmounts;
-    
-    // Grant access to a sub-wallet for a specific token
-    function grantAccess(address subWallet, address token, uint256 limit) external {
-        allowances[msg.sender][subWallet][token] = true;
-        spendingLimits[msg.sender][subWallet][token] = limit;
-        spentAmounts[msg.sender][subWallet][token] = 0;
+contract ZKreditRegistry is
+    IZKreditRegistry,
+    Initializable,
+    UUPSUpgradeable,
+    OwnableUpgradeable
+{
+    // Mapping of depositor address to DepositorInfo
+    mapping(address => DepositorInfo) private _depositorInfo;
+
+    // Set of all registered depositors for enumeration
+    EnumerableSet.AddressSet private _depositors;
+
+    // Mapping of validator address to approved managers (manager => isApproved)
+    mapping(address => mapping(address => bool)) private _validatorManagers;
+
+    /**
+     * @inheritdoc IZKreditRegistry
+     */
+    function registerDepositor(
+        address depositor,
+        address validator,
+        bytes calldata metadata
+    ) external override onlyValidatorManagerOrOwner(validator) {
+        require(
+            depositor != address(0),
+            "ZKreditRegistry: depositor cannot be zero address"
+        );
+
+        // Create or update depositor info
+        _depositorInfo[depositor] = DepositorInfo({
+            validator: validator,
+            isActive: true,
+            metadata: metadata
+        });
+
+        // Add to enumeration set if not already present
+        _depositors.add(depositor);
+
+        emit DepositorRegistered(depositor, validator, metadata);
     }
-    
-    // Approve withdrawal for a sub-wallet
-    function approveWithdrawal(address owner, address token, uint256 amount) external returns (bytes memory) {
-        require(allowances[owner][msg.sender][token], "Not authorized");
-        
-        uint256 limit = spendingLimits[owner][msg.sender][token];
-        if (limit > 0) {
-            uint256 spent = spentAmounts[owner][msg.sender][token];
-            require(spent + amount <= limit, "Exceeds spending limit");
-            spentAmounts[owner][msg.sender][token] = spent + amount;
-        }
-        
-        // Generate signature for ZKredit withdrawal...
-    }
-}`}
+
+    /**
+     * @inheritdoc IZKreditRegistry
+     */
+    function setDepositorActive(
+        address depositor,
+        bool isActive
+    )
+        external
+        override
+        onlyValidatorManagerOrOwner(_depositorInfo[depositor].validator)
+    {
+        require(
+            _depositors.contains(depositor),
+            "ZKreditRegistry: depositor not registered"
+        );
+
+        _depositorInfo[depositor].isActive = isActive;
+
+        emit DepositorActiveStatusChanged(depositor, isActive);
+    }`}
                         </pre>
                       </div>
 
@@ -334,13 +371,13 @@ contract ZKreditRegistry {
                           onClick={() => setActiveTab("base-contract")}
                         >
                           <ArrowLeft className="h-4 w-4 mr-2" />
-                          Back to Base Contract
+                          Back to Core Contract
                         </Button>
                         <Button
                           className="bg-gradient-to-r from-violet-600 to-blue-600 hover:from-violet-700 hover:to-blue-700"
-                          onClick={() => setActiveTab("cex-trust")}
+                          onClick={() => setActiveTab("default-validator")}
                         >
-                          Explore CEX Trust-Us Implementation{" "}
+                          Explore Default Validator{" "}
                           <ChevronRight className="h-4 w-4 ml-2" />
                         </Button>
                       </div>
@@ -348,27 +385,27 @@ contract ZKreditRegistry {
                   </div>
                 </TabsContent>
 
-                <TabsContent value="cex-trust" className="space-y-4">
+                <TabsContent value="default-validator" className="space-y-4">
                   <div className="border border-zinc-800 rounded-lg p-6 bg-zinc-900/30">
                     <div className="space-y-2 mb-8">
                       <h2 className="text-2xl font-bold">
-                        CEX &quot;Trust-Us&quot; Verification
+                        Default Validator
                       </h2>
                       <p className="text-zinc-400">
-                        Use assets held in centralized exchanges without
-                        withdrawing first. The exchange verifies your ownership
-                        and approves transactions.
+                        The default validator verifies signatures for withdrawals and manages authorization of signers.
+                      </p>
+                      <p className="text-sm text-violet-400 mt-2">
+                        Deployed at: 0x817c41d4dd5bca085f31251da0c5d086fd9cc6e8
                       </p>
                     </div>
 
                     <div className="bg-zinc-900 border border-zinc-800 rounded-lg p-6 mb-6">
                       <h3 className="text-xl font-bold mb-4">
-                        CEX Validator Architecture
+                        Validator Architecture
                       </h3>
                       <p className="text-zinc-400 mb-6">
-                        The CEX validator mimics a centralized exchange that
-                        verifies if a wallet is controlled by the exchange and
-                        checks internal balances.
+                        The DefaultValidator implements signature-based verification for withdrawals and paymaster
+                        operations, with nonce tracking to prevent replay attacks.
                       </p>
 
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -379,21 +416,19 @@ contract ZKreditRegistry {
                           <ul className="space-y-2 text-zinc-400">
                             <li className="flex items-start gap-2">
                               <Check className="h-5 w-5 text-green-500 mt-0.5 flex-shrink-0" />
-                              <span>Use CEX assets without withdrawing</span>
+                              <span>Cryptographic signature verification</span>
                             </li>
                             <li className="flex items-start gap-2">
                               <Check className="h-5 w-5 text-green-500 mt-0.5 flex-shrink-0" />
-                              <span>CEX verifies user balances internally</span>
+                              <span>Nonce tracking to prevent replay attacks</span>
                             </li>
                             <li className="flex items-start gap-2">
                               <Check className="h-5 w-5 text-green-500 mt-0.5 flex-shrink-0" />
-                              <span>CEX signs withdrawal approvals</span>
+                              <span>Management of authorized signers</span>
                             </li>
                             <li className="flex items-start gap-2">
                               <Check className="h-5 w-5 text-green-500 mt-0.5 flex-shrink-0" />
-                              <span>
-                                No need to pre-fund blockchain wallets
-                              </span>
+                              <span>ERC-4337 account abstraction support</span>
                             </li>
                           </ul>
                         </div>
@@ -403,16 +438,11 @@ contract ZKreditRegistry {
                             How It Works
                           </h4>
                           <ol className="space-y-2 text-zinc-400 list-decimal pl-5">
-                            <li>
-                              CEX maintains internal record of user balances
-                            </li>
-                            <li>User requests to use assets on-chain</li>
-                            <li>CEX verifies user has sufficient balance</li>
-                            <li>CEX signs approval for ZKredit withdrawal</li>
-                            <li>
-                              User can operate on any chain without moving
-                              assets
-                            </li>
+                            <li>User or application submits withdrawal request</li>
+                            <li>Request includes depositor signature or validator signature</li>
+                            <li>Contract verifies signatures and nonces</li>
+                            <li>Successful validation allows withdrawal</li>
+                            <li>Same flow applies to ERC-4337 paymaster operations</li>
                           </ol>
                         </div>
                       </div>
@@ -420,45 +450,85 @@ contract ZKreditRegistry {
 
                     <div className="bg-zinc-900 border border-zinc-800 rounded-lg p-6">
                       <h3 className="text-xl font-bold mb-4">
-                        CEX Validator Code
+                        Default Validator Code
                       </h3>
                       <div className="bg-zinc-950 p-4 rounded-md font-mono text-sm overflow-x-auto mb-4">
                         <pre className="text-zinc-400">
                           {`// SPDX-License-Identifier: MIT
-pragma solidity ^0.8.20;
+pragma solidity ^0.8.29;
 
-contract CEXTrustUsValidator {
-    // Mapping of CEX-controlled wallets
-    mapping(address => bool) public cexWallets;
-    
-    // Mapping of user balances in the CEX: user => token => amount
-    mapping(address => mapping(address => uint256)) private userBalances;
-    
-    // Check if a user has sufficient balance for a withdrawal
-    function hasSufficientBalance(
-        address user, 
-        address token, 
-        uint256 amount
-    ) public view returns (bool) {
-        return userBalances[user][token] >= amount;
-    }
-    
-    // Generate signature for withdrawal
-    function approveWithdrawal(
-        address user, 
-        address token, 
-        uint256 amount, 
-        address zkredit
-    ) external returns (bytes memory) {
-        require(cexWallets[msg.sender], "Not a CEX-controlled wallet");
-        require(hasSufficientBalance(user, token, amount), "Insufficient balance");
-        
-        // Reduce user balance
-        userBalances[user][token] -= amount;
-        
-        // Generate signature for ZKredit withdrawal...
-    }
-}`}
+contract DefaultValidator is
+    IZKreditValidator,
+    Initializable,
+    UUPSUpgradeable,
+    OwnableUpgradeable
+{
+    using ECDSA for bytes32;
+    using MessageHashUtils for bytes32;
+
+    // Mapping to track used nonces (nonce => isUsed)
+    mapping(bytes32 => bool) public usedNonces;
+
+    // Mapping of authorized admin signers (signer => isAuthorized)
+    mapping(address => bool) public authorizedSigners;
+
+    /**
+     * @inheritdoc IZKreditValidator
+     */
+    function validateWithdrawal(
+        address caller,
+        address depositor,
+        address token,
+        uint256 amount,
+        bytes calldata data
+    ) external view override returns (bool) {
+        // If caller is the depositor, always allow
+        if (caller == depositor) {
+            return true;
+        }
+
+        // If no data provided, reject for non-depositor callers
+        if (data.length == 0) {
+            return false;
+        }
+
+        // Decode signature data
+        (bytes memory signature, bytes32 nonce) = abi.decode(
+            data,
+            (bytes, bytes32)
+        );
+
+        // Check if nonce has been used
+        if (usedNonces[nonce]) {
+            return false;
+        }
+
+        // Hash the withdrawal data
+        bytes32 messageHash = keccak256(
+            abi.encodePacked(
+                caller,
+                depositor,
+                token,
+                amount,
+                nonce,
+                block.chainid
+            )
+        );
+
+        // Prefix the hash (EIP-191)
+        bytes32 prefixedHash = messageHash.toEthSignedMessageHash();
+
+        // Recover signer
+        address signer = ECDSA.recover(prefixedHash, signature);
+
+        // If the signer is the depositor, allow the withdrawal
+        if (signer == depositor) {
+            return true;
+        }
+
+        // If the signer is an authorized admin, also allow
+        return authorizedSigners[signer];
+    }`}
                         </pre>
                       </div>
 
@@ -470,6 +540,180 @@ contract CEXTrustUsValidator {
                         >
                           <ArrowLeft className="h-4 w-4 mr-2" />
                           Back to Registry
+                        </Button>
+                        <Button
+                          className="bg-gradient-to-r from-violet-600 to-blue-600 hover:from-violet-700 hover:to-blue-700"
+                          onClick={() => setActiveTab("paymaster")}
+                        >
+                          Explore Paymaster Integration{" "}
+                          <ChevronRight className="h-4 w-4 ml-2" />
+                        </Button>
+                      </div>
+                    </div>
+                  </div>
+                </TabsContent>
+
+                <TabsContent value="paymaster" className="space-y-4">
+                  <div className="border border-zinc-800 rounded-lg p-6 bg-zinc-900/30">
+                    <div className="space-y-2 mb-8">
+                      <h2 className="text-2xl font-bold">
+                        ZKredit Paymaster
+                      </h2>
+                      <p className="text-zinc-400">
+                        The paymaster contract enables ZKredit funds to be used for gas fees via ERC-4337 account abstraction.
+                      </p>
+                    </div>
+
+                    <div className="bg-zinc-900 border border-zinc-800 rounded-lg p-6 mb-6">
+                      <h3 className="text-xl font-bold mb-4">
+                        Paymaster Architecture
+                      </h3>
+                      <p className="text-zinc-400 mb-6">
+                        ZKreditPaymaster integrates with the ERC-4337 EntryPoint contract to allow users to spend their deposited funds for transaction gas fees.
+                      </p>
+
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div className="border border-zinc-800 rounded-lg p-4 bg-zinc-950">
+                          <h4 className="font-bold mb-2 text-violet-400">
+                            Key Features
+                          </h4>
+                          <ul className="space-y-2 text-zinc-400">
+                            <li className="flex items-start gap-2">
+                              <Check className="h-5 w-5 text-green-500 mt-0.5 flex-shrink-0" />
+                              <span>
+                                ERC-4337 account abstraction support
+                              </span>
+                            </li>
+                            <li className="flex items-start gap-2">
+                              <Check className="h-5 w-5 text-green-500 mt-0.5 flex-shrink-0" />
+                              <span>
+                                Pay gas fees with ZKredit deposits
+                              </span>
+                            </li>
+                            <li className="flex items-start gap-2">
+                              <Check className="h-5 w-5 text-green-500 mt-0.5 flex-shrink-0" />
+                              <span>Support for multiple token types</span>
+                            </li>
+                            <li className="flex items-start gap-2">
+                              <Check className="h-5 w-5 text-green-500 mt-0.5 flex-shrink-0" />
+                              <span>
+                                Authorized validator-based approval flow
+                              </span>
+                            </li>
+                          </ul>
+                        </div>
+
+                        <div className="border border-zinc-800 rounded-lg p-4 bg-zinc-950">
+                          <h4 className="font-bold mb-2 text-violet-400">
+                            How It Works
+                          </h4>
+                          <ol className="space-y-2 text-zinc-400 list-decimal pl-5">
+                            <li>
+                              User initiates UserOperation with ZKredit paymaster
+                            </li>
+                            <li>Paymaster validates the operation</li>
+                            <li>
+                              ZKredit core verifies user has sufficient funds
+                            </li>
+                            <li>
+                              Validator approves spending from user&apos;s deposits
+                            </li>
+                            <li>
+                              Transaction completes with gas fees covered by ZKredit
+                            </li>
+                          </ol>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="bg-zinc-900 border border-zinc-800 rounded-lg p-6">
+                      <h3 className="text-xl font-bold mb-4">
+                        Paymaster Code
+                      </h3>
+                      <div className="bg-zinc-950 p-4 rounded-md font-mono text-sm overflow-x-auto mb-4">
+                        <pre className="text-zinc-400">
+                          {`// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.29;
+
+contract ZKreditPaymaster is
+    IZKreditPaymaster,
+    Initializable,
+    UUPSUpgradeable,
+    OwnableUpgradeable
+{
+    using SafeERC20 for IERC20;
+
+    // The EntryPoint contract
+    IEntryPoint public entryPoint;
+
+    // The ZKredit core contract
+    IZKreditCore public zkreditCore;
+
+    // Mapping of tokens supported by this paymaster (token => isSupported)
+    mapping(address => bool) public supportedTokens;
+
+    /**
+     * @inheritdoc IPaymaster
+     */
+    function validatePaymasterUserOp(
+        PackedUserOperation calldata userOp,
+        bytes32 userOpHash,
+        uint256 maxCost
+    )
+        external
+        override
+        onlyEntryPoint
+        whenNotPaused
+        returns (bytes memory context, uint256 validationData)
+    {
+        // Extract paymaster data
+        (
+            address token,
+            address depositor,
+            bytes memory validationBytes
+        ) = _parsePaymasterData(userOp.paymasterAndData);
+
+        require(
+            supportedTokens[token],
+            "ZKreditPaymaster: token not supported"
+        );
+
+        // Check if depositor has enough balance
+        require(
+            zkreditCore.balanceOf(depositor, token) >= maxCost,
+            "ZKreditPaymaster: insufficient depositor balance"
+        );
+
+        // Try to pre-fund the transaction using ZKreditCore
+        bool success = zkreditCore.preTx(
+            userOp.sender,
+            depositor,
+            token,
+            maxCost,
+            validationBytes
+        );
+
+        require(success, "ZKreditPaymaster: preTx failed");
+
+        // Encode context for postOp
+        context = abi.encode(userOp.sender, depositor, token, maxCost);
+
+        // No deadline (validUntil/validAfter) or aggregator
+        validationData = 0;
+
+        return (context, validationData);
+    }`}
+                        </pre>
+                      </div>
+
+                      <div className="flex space-x-4">
+                        <Button
+                          variant="outline"
+                          className="border-zinc-700 text-white hover:bg-zinc-800"
+                          onClick={() => setActiveTab("default-validator")}
+                        >
+                          <ArrowLeft className="h-4 w-4 mr-2" />
+                          Back to Default Validator
                         </Button>
                         <Button
                           className="bg-gradient-to-r from-violet-600 to-blue-600 hover:from-violet-700 hover:to-blue-700"
@@ -494,6 +738,9 @@ contract CEXTrustUsValidator {
                         sensitive financial information using SP1 zero-knowledge
                         circuits.
                       </p>
+                      <p className="text-sm text-amber-400 mt-2">
+                        Coming Soon - Integration in Progress
+                      </p>
                     </div>
 
                     <div className="bg-zinc-900 border border-zinc-800 rounded-lg p-6 mb-6">
@@ -509,7 +756,7 @@ contract CEXTrustUsValidator {
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div className="border border-zinc-800 rounded-lg p-4 bg-zinc-950">
                           <h4 className="font-bold mb-2 text-violet-400">
-                            Key Features
+                            Planned Features
                           </h4>
                           <ul className="space-y-2 text-zinc-400">
                             <li className="flex items-start gap-2">
@@ -521,20 +768,19 @@ contract CEXTrustUsValidator {
                             <li className="flex items-start gap-2">
                               <Check className="h-5 w-5 text-green-500 mt-0.5 flex-shrink-0" />
                               <span>
-                                Prove credit-worthiness without revealing
-                                details
+                                Prove credit-worthiness without revealing details
                               </span>
                             </li>
                             <li className="flex items-start gap-2">
                               <Check className="h-5 w-5 text-green-500 mt-0.5 flex-shrink-0" />
                               <span>
-                                Cryptographic verification of credit lines
+                                Integration with ZKredit validation system
                               </span>
                             </li>
                             <li className="flex items-start gap-2">
                               <Check className="h-5 w-5 text-green-500 mt-0.5 flex-shrink-0" />
                               <span>
-                                On-chain verification of off-chain data
+                                Custom validator implementation for SP1 proofs
                               </span>
                             </li>
                           </ul>
@@ -542,157 +788,40 @@ contract CEXTrustUsValidator {
 
                         <div className="border border-zinc-800 rounded-lg p-4 bg-zinc-950">
                           <h4 className="font-bold mb-2 text-violet-400">
-                            How It Works
+                            Implementation Status
                           </h4>
-                          <ol className="space-y-2 text-zinc-400 list-decimal pl-5">
-                            <li>
-                              Credit provider assesses user&apos;s credit-worthiness
-                            </li>
-                            <li>
-                              User generates a zero-knowledge proof of their
-                              credit line
-                            </li>
-                            <li>
-                              Proof verifies credit without revealing sensitive
-                              data
-                            </li>
-                            <li>
-                              ZKredit contract verifies the proof on-chain
-                            </li>
-                            <li>
-                              User can operate based on their verified credit
-                              line
-                            </li>
-                          </ol>
+                          <div className="space-y-4 text-zinc-400">
+                            <p>
+                              The SP1 credit verification is currently under development. 
+                              It will extend the ZKredit validator system with SP1-specific 
+                              proof verification.
+                            </p>
+                            <p>
+                              This validator will accept zero-knowledge proofs generated off-chain
+                              that demonstrate a user&apos;s credit-worthiness without revealing
+                              sensitive financial details.
+                            </p>
+                          </div>
                         </div>
                       </div>
                     </div>
 
-                    <div className="bg-zinc-900 border border-zinc-800 rounded-lg p-6">
-                      <h3 className="text-xl font-bold mb-4">
-                        SP1 Credit Verification Implementation
-                      </h3>
-
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-                        <div className="bg-zinc-950 p-4 rounded-md font-mono text-sm overflow-x-auto">
-                          <h4 className="font-bold mb-2 text-violet-400">
-                            SP1 Circuit (Rust)
-                          </h4>
-                          <pre className="text-zinc-400">
-                            {`// SP1 credit verification circuit
-fn main() {
-    // Input: User's credit score, income, debt
-    // These inputs are private and not revealed
-    let credit_score = sp1_input!(u32);
-    let income = sp1_input!(u64);
-    let debt = sp1_input!(u64);
-    
-    // Credit line threshold parameters
-    let min_credit_score = 650;
-    let max_debt_to_income = 40; // 40%
-    
-    // Verify credit score meets minimum
-    sp1_assert!(credit_score >= min_credit_score);
-    
-    // Calculate debt-to-income ratio (percentage)
-    let debt_to_income = (debt * 100) / income;
-    
-    // Verify debt-to-income ratio is acceptable
-    sp1_assert!(debt_to_income <= max_debt_to_income);
-    
-    // Calculate approved credit line
-    let credit_line = if credit_score > 750 {
-        income / 3
-    } else {
-        income / 5
-    };
-    
-    // Output only the approved credit line
-    // The private inputs remain confidential
-    sp1_output!(credit_line);
-}`}
-                          </pre>
-                        </div>
-
-                        <div className="bg-zinc-950 p-4 rounded-md font-mono text-sm overflow-x-auto">
-                          <h4 className="font-bold mb-2 text-violet-400">
-                            Solidity Verifier
-                          </h4>
-                          <pre className="text-zinc-400">
-                            {`// SPDX-License-Identifier: MIT
-pragma solidity ^0.8.20;
-
-contract SP1CreditVerifier {
-    // Mapping of verified credit lines
-    mapping(address => uint256) public creditLines;
-    
-    // Event emitted when a credit line is verified
-    event CreditLineVerified(
-        address indexed user, 
-        uint256 creditLine
-    );
-    
-    // Verify SP1 proof and record credit line
-    function verifyCreditLine(
-        bytes calldata proof,
-        uint256 creditLine
-    ) external {
-        // Verify the SP1 proof
-        // This would call the SP1 verification library
-        bool isValid = verifyProof(proof, creditLine);
-        require(isValid, "Invalid proof");
-        
-        // Record the verified credit line
-        creditLines[msg.sender] = creditLine;
-        
-        emit CreditLineVerified(msg.sender, creditLine);
-    }
-    
-    // Generate signature for ZKredit withdrawal
-    function approveWithdrawal(
-        address user,
-        address token,
-        uint256 amount,
-        address zkredit
-    ) external view returns (bytes memory) {
-        // Check if user has sufficient credit line
-        require(creditLines[user] >= amount, 
-            "Insufficient credit line");
-        
-        // Generate signature...
-    }
-    
-    // Mock function for proof verification
-    function verifyProof(
-        bytes calldata proof,
-        uint256 creditLine
-    ) internal pure returns (bool) {
-        // In a real implementation, this would
-        // verify the SP1 zero-knowledge proof
-        return true;
-    }
-}`}
-                          </pre>
-                        </div>
-                      </div>
-
-                      <div className="flex space-x-4">
-                        <Button
-                          variant="outline"
-                          className="border-zinc-700 text-white hover:bg-zinc-800"
-                          onClick={() => setActiveTab("cex-trust")}
-                        >
-                          <ArrowLeft className="h-4 w-4 mr-2" />
-                          Back to CEX Trust-Us
-                        </Button>
-                        <Button
-                          className="bg-gradient-to-r from-violet-600 to-blue-600 hover:from-violet-700 hover:to-blue-700"
-                          onClick={() => setActiveTab("noir-jwt")}
-                        >
-                          Explore Noir JWT Verification{" "}
-                          <ChevronRight className="h-4 w-4 ml-2" />
-                        </Button>
-                      </div>
+                    <div className="flex space-x-4 justify-end">
+                      <Button
+                        variant="outline"
+                        className="border-zinc-700 text-white hover:bg-zinc-800"
+                        onClick={() => setActiveTab("paymaster")}
+                      >
+                        <ArrowLeft className="h-4 w-4 mr-2" />
+                        Back to Paymaster
+                      </Button>
+                      <Button
+                        className="bg-gradient-to-r from-violet-600 to-blue-600 hover:from-violet-700 hover:to-blue-700"
+                        onClick={() => setActiveTab("noir-jwt")}
+                      >
+                        Explore Noir JWT Verification{" "}
+                        <ChevronRight className="h-4 w-4 ml-2" />
+                      </Button>
                     </div>
                   </div>
                 </TabsContent>
@@ -708,6 +837,9 @@ contract SP1CreditVerifier {
                         revealing personal details, perfect for company-wide
                         spending accounts.
                       </p>
+                      <p className="text-sm text-amber-400 mt-2">
+                        Coming Soon - Integration in Progress
+                      </p>
                     </div>
 
                     <div className="bg-zinc-900 border border-zinc-800 rounded-lg p-6 mb-6">
@@ -715,36 +847,39 @@ contract SP1CreditVerifier {
                         Noir JWT Verification Architecture
                       </h3>
                       <p className="text-zinc-400 mb-6">
-                        Noir is a zero-knowledge DSL that can verify JWT tokens
-                        from Google Workspace to prove organizational membership
-                        without revealing personal information.
+                        This implementation uses Noir to verify JWT tokens from 
+                        identity providers like Google, allowing users to prove 
+                        organizational membership without revealing personal details.
                       </p>
 
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div className="border border-zinc-800 rounded-lg p-4 bg-zinc-950">
                           <h4 className="font-bold mb-2 text-violet-400">
-                            Key Features
+                            Planned Features
                           </h4>
                           <ul className="space-y-2 text-zinc-400">
                             <li className="flex items-start gap-2">
                               <Check className="h-5 w-5 text-green-500 mt-0.5 flex-shrink-0" />
-                              <span>Verify Google Workspace membership</span>
-                            </li>
-                            <li className="flex items-start gap-2">
-                              <Check className="h-5 w-5 text-green-500 mt-0.5 flex-shrink-0" />
-                              <span>Privacy-preserving verification</span>
-                            </li>
-                            <li className="flex items-start gap-2">
-                              <Check className="h-5 w-5 text-green-500 mt-0.5 flex-shrink-0" />
                               <span>
-                                Prove group membership without revealing
-                                identity
+                                Privacy-preserving organization membership verification
                               </span>
                             </li>
                             <li className="flex items-start gap-2">
                               <Check className="h-5 w-5 text-green-500 mt-0.5 flex-shrink-0" />
                               <span>
-                                Integrate with existing organizational systems
+                                Support for Google Workspace and other identity providers
+                              </span>
+                            </li>
+                            <li className="flex items-start gap-2">
+                              <Check className="h-5 w-5 text-green-500 mt-0.5 flex-shrink-0" />
+                              <span>
+                                Custom Noir circuits for JWT validation
+                              </span>
+                            </li>
+                            <li className="flex items-start gap-2">
+                              <Check className="h-5 w-5 text-green-500 mt-0.5 flex-shrink-0" />
+                              <span>
+                                Integration with ZKredit validator system
                               </span>
                             </li>
                           </ul>
@@ -752,457 +887,49 @@ contract SP1CreditVerifier {
 
                         <div className="border border-zinc-800 rounded-lg p-4 bg-zinc-950">
                           <h4 className="font-bold mb-2 text-violet-400">
-                            How It Works
+                            Implementation Status
                           </h4>
-                          <ol className="space-y-2 text-zinc-400 list-decimal pl-5">
-                            <li>User authenticates with Google Workspace</li>
-                            <li>
-                              User receives a JWT token with group membership
-                              claims
-                            </li>
-                            <li>
-                              Noir circuit verifies JWT signature and claims
-                            </li>
-                            <li>
-                              Circuit outputs proof of membership without
-                              revealing the JWT
-                            </li>
-                            <li>
-                              ZKredit contract verifies the proof on-chain
-                            </li>
-                          </ol>
+                          <div className="space-y-4 text-zinc-400">
+                            <p>
+                              The Noir JWT verification is under active development. 
+                              It will allow users to generate proofs from their 
+                              organizational JWT tokens and use these proofs with ZKredit.
+                            </p>
+                            <p>
+                              This validator will enable corporate treasuries to manage 
+                              spend limits for members without requiring each member to 
+                              have upfront funds.
+                            </p>
+                          </div>
                         </div>
                       </div>
                     </div>
 
-                    <div className="bg-zinc-900 border border-zinc-800 rounded-lg p-6">
-                      <h3 className="text-xl font-bold mb-4">
-                        Noir JWT Verification Implementation
-                      </h3>
-
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-                        <div className="bg-zinc-950 p-4 rounded-md font-mono text-sm overflow-x-auto">
-                          <h4 className="font-bold mb-2 text-violet-400">
-                            Noir Circuit
-                          </h4>
-                          <pre className="text-zinc-400">
-                            {`// Noir JWT verification circuit
-fn main(
-    jwt_header: [u8; 32],
-    jwt_payload: [u8; 256],
-    jwt_signature: [u8; 64],
-    google_pubkey: [u8; 32],
-    expected_domain: [u8; 32],
-    expected_group: [u8; 32]
-) {
-    // Verify JWT signature using Google's public key
-    let message_hash = sha256(jwt_header, jwt_payload);
-    let is_valid = verify_ecdsa(
-        message_hash, 
-        jwt_signature, 
-        google_pubkey
-    );
-    constrain is_valid == 1;
-    
-    // Extract claims from JWT payload
-    let domain = extract_claim(jwt_payload, "hd");
-    let groups = extract_claim(jwt_payload, "groups");
-    
-    // Verify domain matches expected domain
-    constrain domain == expected_domain;
-    
-    // Verify group membership
-    let is_member = contains(groups, expected_group);
-    constrain is_member == 1;
-    
-    // The proof verifies that the user is a member
-    // of the expected group in the expected domain
-    // without revealing the actual JWT or user identity
-}`}
-                          </pre>
-                        </div>
-
-                        <div className="bg-zinc-950 p-4 rounded-md font-mono text-sm overflow-x-auto">
-                          <h4 className="font-bold mb-2 text-violet-400">
-                            Solidity Verifier
-                          </h4>
-                          <pre className="text-zinc-400">
-                            {`// SPDX-License-Identifier: MIT
-pragma solidity ^0.8.20;
-
-contract NoirJWTVerifier {
-    // Mapping of verified organizations
-    mapping(address => string) public verifiedOrgs;
-    
-    // Mapping of organization spending limits
-    mapping(string => uint256) public orgSpendingLimits;
-    
-    // Event emitted when a membership is verified
-    event MembershipVerified(
-        address indexed user, 
-        string organization
-    );
-    
-    // Verify Noir proof and record membership
-    function verifyMembership(
-        bytes calldata proof,
-        string calldata organization
-    ) external {
-        // Verify the Noir proof
-        // This would call the Noir verification library
-        bool isValid = verifyProof(proof);
-        require(isValid, "Invalid proof");
-        
-        // Record the verified organization
-        verifiedOrgs[msg.sender] = organization;
-        
-        emit MembershipVerified(msg.sender, organization);
-    }
-    
-    // Generate signature for ZKredit withdrawal
-    function approveWithdrawal(
-        address user,
-        address token,
-        uint256 amount,
-        address zkredit
-    ) external view returns (bytes memory) {
-        string memory org = verifiedOrgs[user];
-        require(bytes(org).length > 0, 
-            "Not a verified member");
-        
-        // Check if amount is within org spending limit
-        require(amount <= orgSpendingLimits[org], 
-            "Exceeds organization spending limit");
-        
-        // Generate signature...
-    }
-    
-    // Mock function for proof verification
-    function verifyProof(
-        bytes calldata proof
-    ) internal pure returns (bool) {
-        // In a real implementation, this would
-        // verify the Noir zero-knowledge proof
-        return true;
-    }
-}`}
-                          </pre>
-                        </div>
-                      </div>
-
-                      <div className="flex space-x-4">
-                        <Button
-                          variant="outline"
-                          className="border-zinc-700 text-white hover:bg-zinc-800"
-                          onClick={() => setActiveTab("sp1-credit")}
-                        >
-                          <ArrowLeft className="h-4 w-4 mr-2" />
-                          Back to SP1 Credit
-                        </Button>
-                        <Button
-                          className="bg-gradient-to-r from-violet-600 to-blue-600 hover:from-violet-700 hover:to-blue-700"
-                          onClick={() => setActiveTab("base-contract")}
-                        >
-                          Return to Base Contract{" "}
-                          <ArrowLeft className="h-4 w-4 ml-2" />
-                        </Button>
-                      </div>
-                    </div>
-                  </div>
-                </TabsContent>
-
-                <TabsContent value="default-spending" className="space-y-4">
-                  <div className="border border-zinc-800 rounded-lg p-6 bg-zinc-900/30">
-                    <div className="space-y-2 mb-8">
-                      <h2 className="text-2xl font-bold">Default Spending</h2>
-                      <p className="text-zinc-400">
-                        Skip transfers completely and use funds directly from
-                        the owner of Account Abstraction wallets.
-                      </p>
-                    </div>
-
-                    <div className="bg-zinc-900 border border-zinc-800 rounded-lg p-6 mb-6">
-                      <h3 className="text-xl font-bold mb-4">
-                        Default Spending Architecture
-                      </h3>
-                      <p className="text-zinc-400 mb-6">
-                        Default Spending leverages Account Abstraction to allow
-                        direct spending from the owner&apos;s wallet without
-                        requiring transfers.
-                      </p>
-
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <div className="border border-zinc-800 rounded-lg p-4 bg-zinc-950">
-                          <h4 className="font-bold mb-2 text-violet-400">
-                            Key Features
-                          </h4>
-                          <ul className="space-y-2 text-zinc-400">
-                            <li className="flex items-start gap-2">
-                              <Check className="h-5 w-5 text-green-500 mt-0.5 flex-shrink-0" />
-                              <span>No pre-funding or transfers required</span>
-                            </li>
-                            <li className="flex items-start gap-2">
-                              <Check className="h-5 w-5 text-green-500 mt-0.5 flex-shrink-0" />
-                              <span>Direct spending from owner&apos;s wallet</span>
-                            </li>
-                            <li className="flex items-start gap-2">
-                              <Check className="h-5 w-5 text-green-500 mt-0.5 flex-shrink-0" />
-                              <span>
-                                Leverages Account Abstraction (ERC-4337)
-                              </span>
-                            </li>
-                            <li className="flex items-start gap-2">
-                              <Check className="h-5 w-5 text-green-500 mt-0.5 flex-shrink-0" />
-                              <span>Simplified user experience</span>
-                            </li>
-                          </ul>
-                        </div>
-
-                        <div className="border border-zinc-800 rounded-lg p-4 bg-zinc-950">
-                          <h4 className="font-bold mb-2 text-violet-400">
-                            How It Works
-                          </h4>
-                          <ol className="space-y-2 text-zinc-400 list-decimal pl-5">
-                            <li>User creates an Account Abstraction wallet</li>
-                            <li>
-                              User authorizes ZKredit as a spending validator
-                            </li>
-                            <li>ZKredit verifies the user&apos;s ownership</li>
-                            <li>
-                              Transactions are executed directly from the
-                              owner&apos;s wallet
-                            </li>
-                            <li>No need to pre-fund or transfer assets</li>
-                          </ol>
-                        </div>
-                      </div>
-                    </div>
-
-                    <div className="bg-zinc-900 border border-zinc-800 rounded-lg p-6">
-                      <h3 className="text-xl font-bold mb-4">
-                        Default Spending Implementation
-                      </h3>
-
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-                        <div className="bg-zinc-950 p-4 rounded-md font-mono text-sm overflow-x-auto">
-                          <h4 className="font-bold mb-2 text-violet-400">
-                            Account Abstraction Setup
-                          </h4>
-                          <pre className="text-zinc-400">
-                            {`// SPDX-License-Identifier: MIT
-pragma solidity ^0.8.20;
-
-import "@account-abstraction/contracts/core/EntryPoint.sol";
-import "@account-abstraction/contracts/interfaces/IAccount.sol";
-
-contract ZKreditAAWallet is IAccount {
-    address public owner;
-    address public zkredit;
-    EntryPoint public entryPoint;
-    
-    constructor(
-        address _owner,
-        address _zkredit,
-        address _entryPoint
-    ) {
-        owner = _owner;
-        zkredit = _zkredit;
-        entryPoint = EntryPoint(_entryPoint);
-    }
-    
-    // Validate user operation
-    function validateUserOp(
-        UserOperation calldata userOp,
-        bytes32 userOpHash,
-        uint256 missingAccountFunds
-    ) external override returns (uint256 validationData) {
-        // Verify the operation is from ZKredit
-        // or signed by the owner
-        if (msg.sender == address(entryPoint)) {
-            if (userOp.sender == zkredit) {
-                // ZKredit is authorized to spend
-                return 0; // Valid
-            }
-            
-            // Verify owner signature
-            bytes32 hash = userOpHash;
-            bytes memory signature = userOp.signature;
-            // Verify signature...
-        }
-        
-        return 1; // Invalid by default
-    }
-}`}
-                          </pre>
-                        </div>
-
-                        <div className="bg-zinc-950 p-4 rounded-md font-mono text-sm overflow-x-auto">
-                          <h4 className="font-bold mb-2 text-violet-400">
-                            ZKredit Default Spending
-                          </h4>
-                          <pre className="text-zinc-400">
-                            {`// SPDX-License-Identifier: MIT
-pragma solidity ^0.8.20;
-
-import "@account-abstraction/contracts/core/EntryPoint.sol";
-
-contract ZKreditDefaultSpending {
-    EntryPoint public entryPoint;
-    
-    // Mapping of verified AA wallets
-    mapping(address => bool) public verifiedWallets;
-    
-    constructor(address _entryPoint) {
-        entryPoint = EntryPoint(_entryPoint);
-    }
-    
-    // Verify and register an AA wallet
-    function verifyWallet(address wallet) external {
-        // Verify the wallet is valid
-        // and owned by the caller
-        // ...
-        
-        verifiedWallets[wallet] = true;
-    }
-    
-    // Execute a transaction from the AA wallet
-    function executeTransaction(
-        address wallet,
-        address target,
-        uint256 value,
-        bytes calldata data
-    ) external {
-        require(verifiedWallets[wallet], 
-            "Wallet not verified");
-        
-        // Create a user operation
-        UserOperation memory userOp = UserOperation({
-            sender: wallet,
-            nonce: entryPoint.getNonce(wallet, 0),
-            initCode: bytes(""),
-            callData: abi.encodeWithSelector(
-                bytes4(keccak256("execute(address,uint256,bytes)")),
-                target,
-                value,
-                data
-            ),
-            callGasLimit: 2000000,
-            verificationGasLimit: 1000000,
-            preVerificationGas: 100000,
-            maxFeePerGas: tx.gasprice,
-            maxPriorityFeePerGas: tx.gasprice,
-            paymasterAndData: bytes(""),
-            signature: bytes("")
-        });
-        
-        // Execute the operation
-        entryPoint.handleOps(
-            [userOp],
-            payable(msg.sender)
-        );
-    }
-}`}
-                          </pre>
-                        </div>
-                      </div>
-
-                      <div className="flex space-x-4">
-                        <Button
-                          variant="outline"
-                          className="border-zinc-700 text-white hover:bg-zinc-800"
-                          onClick={() => setActiveTab("noir-jwt")}
-                        >
-                          <ArrowLeft className="h-4 w-4 mr-2" />
-                          Back to Noir JWT
-                        </Button>
-                        <Button
-                          className="bg-gradient-to-r from-violet-600 to-blue-600 hover:from-violet-700 hover:to-blue-700"
-                          onClick={() => setActiveTab("base-contract")}
-                        >
-                          Return to Base Contract{" "}
-                          <ArrowLeft className="h-4 w-4 ml-2" />
-                        </Button>
-                      </div>
+                    <div className="flex space-x-4">
+                      <Button
+                        variant="outline"
+                        className="border-zinc-700 text-white hover:bg-zinc-800"
+                        onClick={() => setActiveTab("sp1-credit")}
+                      >
+                        <ArrowLeft className="h-4 w-4 mr-2" />
+                        Back to SP1 Credit
+                      </Button>
+                      <Button
+                        variant="outline"
+                        className="border-zinc-700 text-white hover:bg-zinc-800"
+                        onClick={() => setActiveTab("base-contract")}
+                      >
+                        Return to Core Contract{" "}
+                        <ChevronRight className="h-4 w-4 ml-2" />
+                      </Button>
                     </div>
                   </div>
                 </TabsContent>
               </Tabs>
             </div>
-
-            <div className="mt-16 grid grid-cols-1 md:grid-cols-3 gap-6">
-              <Card className="bg-zinc-900 border-zinc-800 hover:border-violet-500/50 transition-all duration-300">
-                <CardHeader>
-                  <Code className="h-10 w-10 text-violet-500 mb-2" />
-                  <CardTitle className="text-white">
-                    Expandable Architecture
-                  </CardTitle>
-                  <CardDescription className="text-zinc-400">
-                    Built for composability
-                  </CardDescription>
-                </CardHeader>
-                <CardContent className="text-zinc-400">
-                  <p>
-                    ZKredit&apos;s modular design allows for easy integration of new
-                    verification methods and use cases.
-                  </p>
-                </CardContent>
-              </Card>
-
-              <Card className="bg-zinc-900 border-zinc-800 hover:border-violet-500/50 transition-all duration-300">
-                <CardHeader>
-                  <Shield className="h-10 w-10 text-violet-500 mb-2" />
-                  <CardTitle className="text-white">
-                    Privacy-Preserving
-                  </CardTitle>
-                  <CardDescription className="text-zinc-400">
-                    Zero-knowledge by design
-                  </CardDescription>
-                </CardHeader>
-                <CardContent className="text-zinc-400">
-                  <p>
-                    Verify assets and credentials without revealing sensitive
-                    information, keeping your financial details private.
-                  </p>
-                </CardContent>
-              </Card>
-
-              <Card className="bg-zinc-900 border-zinc-800 hover:border-violet-500/50 transition-all duration-300">
-                <CardHeader>
-                  <Network className="h-10 w-10 text-violet-500 mb-2" />
-                  <CardTitle className="text-white">
-                    Cross-Chain Ready
-                  </CardTitle>
-                  <CardDescription className="text-zinc-400">
-                    Operate anywhere
-                  </CardDescription>
-                </CardHeader>
-                <CardContent className="text-zinc-400">
-                  <p>
-                    Use your assets on any blockchain without pre-funding or
-                    bridging, maximizing capital efficiency.
-                  </p>
-                </CardContent>
-              </Card>
-            </div>
           </section>
         </main>
       </PageTransition>
-
-      <footer className="w-full py-6 bg-zinc-950 border-t border-zinc-800">
-        <div className="container px-4 md:px-6">
-          <div className="flex flex-col md:flex-row items-center justify-between gap-4">
-            <div className="flex items-center gap-2">
-              <Shield className="h-6 w-6 text-violet-500" />
-              <span className="text-lg font-bold bg-gradient-to-r from-violet-500 to-blue-500 bg-clip-text text-transparent">
-                ZKredit.xyz
-              </span>
-            </div>
-            <p className="text-sm text-zinc-500">
-              © 2025 ZKredit. All rights reserved.
-            </p>
-          </div>
-        </div>
-      </footer>
     </div>
   );
 }
