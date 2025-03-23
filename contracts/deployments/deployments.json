@@ -1,0 +1,21 @@
+{
+  "timestamp": 1742740175068,
+  "contracts": {
+    "ZKreditRegistry": {
+      "address": "0x4b2c79367e640f537e823cb14683256a5de4cf83",
+      "abi": "abis/ZKreditRegistry.json"
+    },
+    "DefaultValidator": {
+      "address": "0x817c41d4dd5bca085f31251da0c5d086fd9cc6e8",
+      "abi": "abis/DefaultValidator.json"
+    },
+    "ZKreditCore": {
+      "address": "0x4d967ae3e0ccb462582b46891d92f0d7efe5e522",
+      "abi": "abis/ZKreditCore.json"
+    },
+    "ERC1967Proxy": {
+      "address": "0xa2d508e5e6eaf780e91b939b1524aa41c6605522",
+      "abi": "abis/ERC1967Proxy.json"
+    }
+  }
+}
