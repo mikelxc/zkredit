@@ -386,7 +386,7 @@ export default function LandingPage() {
                 custom={0}
                 className="lg:col-span-3"
               >
-                <Card className="bg-zinc-900 border-zinc-800 hover:border-violet-500/50 transition-all duration-300 hover:-translate-y-1">
+                <Card className="bg-zinc-900 border-zinc-800 hover:border-violet-500/50 transition-all duration-300 hover:-translate-y-1 h-full flex flex-col">
                   <CardHeader>
                     <Database className="h-10 w-10 text-violet-500 mb-2" />
                     <CardTitle className="text-white">
@@ -630,7 +630,7 @@ export default function LandingPage() {
               </span>
             </div>
             <p className="text-sm text-zinc-500">
-              © 2023 ZKredit. All rights reserved.
+              © 2025 ZKredit. All rights reserved.
             </p>
             <div className="flex items-center gap-4">
               <Link

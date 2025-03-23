@@ -5,11 +5,28 @@ import Link from "next/link";
 import { Shield } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import { usePathname, useRouter } from "next/navigation";
 
 export default function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [activeSection, setActiveSection] = useState("");
+  const pathname = usePathname();
+  const router = useRouter();
+
+  // Separate useEffect for pathname-dependent logic
+  useEffect(() => {
+    // Check if we have a pending section to scroll to after navigation
+    if (pathname === "/") {
+      const pendingSection = sessionStorage.getItem("pendingScroll");
+      if (pendingSection) {
+        sessionStorage.removeItem("pendingScroll");
+        setTimeout(() => {
+          scrollToSection(pendingSection);
+        }, 100); // Small delay to ensure the page has fully loaded
+      }
+    }
+  }, [pathname]); // This effect depends on pathname changes
 
   useEffect(() => {
     const handleScroll = () => {
@@ -54,6 +71,35 @@ export default function Navbar() {
     setIsMobileMenuOpen(false);
   };
 
+  const handleLogoClick = (sectionId?: string) => {
+    if (pathname === "/") {
+      // If already on home page, scroll to section or top
+      if (sectionId) {
+        scrollToSection(sectionId);
+      } else {
+        window.scrollTo({
+          top: 0,
+          behavior: "smooth",
+        });
+      }
+    } else {
+      // If not on home page, navigate to home and prepare to scroll
+      if (sectionId) {
+        sessionStorage.setItem("pendingScroll", sectionId);
+      }
+      router.push("/");
+    }
+  };
+
+  const handleNavClick = (sectionId: string) => {
+    if (pathname === "/") {
+      scrollToSection(sectionId);
+    } else {
+      sessionStorage.setItem("pendingScroll", sectionId);
+      router.push("/");
+    }
+  };
+
   return (
     <header
       className={cn(
@@ -64,7 +110,10 @@ export default function Navbar() {
       )}
     >
       <div className="container flex h-16 items-center justify-between py-4">
-        <div className="flex items-center gap-2">
+        <div 
+          className="flex items-center gap-2 cursor-pointer" 
+          onClick={() => handleLogoClick()}
+        >
           <Shield
             className={cn(
               "h-8 w-8 text-violet-500 transition-transform duration-300",
@@ -117,25 +166,25 @@ export default function Navbar() {
         >
           <button
             className="text-lg font-medium text-white hover:text-violet-400 transition-colors"
-            onClick={() => scrollToSection("problem")}
+            onClick={() => handleNavClick("problem")}
           >
             Problem
           </button>
           <button
             className="text-lg font-medium text-white hover:text-violet-400 transition-colors"
-            onClick={() => scrollToSection("solution")}
+            onClick={() => handleNavClick("solution")}
           >
             Solution
           </button>
           <button
             className="text-lg font-medium text-white hover:text-violet-400 transition-colors"
-            onClick={() => scrollToSection("validators")}
+            onClick={() => handleNavClick("validators")}
           >
             Validator Types
           </button>
           <button
             className="text-lg font-medium text-white hover:text-violet-400 transition-colors"
-            onClick={() => scrollToSection("how-it-works")}
+            onClick={() => handleNavClick("how-it-works")}
           >
             How It Works
           </button>
@@ -156,7 +205,7 @@ export default function Navbar() {
         {/* Desktop navigation */}
         <nav className="hidden md:flex items-center gap-6">
           <button
-            onClick={() => scrollToSection("problem")}
+            onClick={() => handleNavClick("problem")}
             className={`text-sm font-medium transition-colors ${
               activeSection === "problem"
                 ? "text-white"
@@ -166,7 +215,7 @@ export default function Navbar() {
             Problem
           </button>
           <button
-            onClick={() => scrollToSection("solution")}
+            onClick={() => handleNavClick("solution")}
             className={`text-sm font-medium transition-colors ${
               activeSection === "solution"
                 ? "text-white"
@@ -176,7 +225,7 @@ export default function Navbar() {
             Solution
           </button>
           <button
-            onClick={() => scrollToSection("validators")}
+            onClick={() => handleNavClick("validators")}
             className={`text-sm font-medium transition-colors ${
               activeSection === "validators"
                 ? "text-white"
@@ -186,7 +235,7 @@ export default function Navbar() {
             Validator Types
           </button>
           <button
-            onClick={() => scrollToSection("how-it-works")}
+            onClick={() => handleNavClick("how-it-works")}
             className={`text-sm font-medium transition-colors ${
               activeSection === "how-it-works"
                 ? "text-white"
