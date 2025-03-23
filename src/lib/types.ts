@@ -83,6 +83,8 @@ export interface ZkProof {
   expiresAt: number;
   verificationCount: number;
   lastVerified?: number;
+  proofType: string; // Add this property
+  assetTicker?: string;
 }
 
 // AI Agent related types

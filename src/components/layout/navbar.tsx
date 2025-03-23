@@ -6,7 +6,6 @@ import { usePathname } from 'next/navigation';
 import { Disclosure, Menu, Transition } from '@headlessui/react';
 import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline';
 import { usePrivy } from '@privy-io/react-auth';
-import { useUser } from '@/lib/providers/user-provider';
 
 function classNames(...classes: string[]) {
   return classes.filter(Boolean).join(' ');
@@ -15,7 +14,6 @@ function classNames(...classes: string[]) {
 export default function Navbar() {
   const pathname = usePathname();
   const { login, logout, authenticated, user } = usePrivy();
-  const { user: userData } = useUser();
 
   const navigation = [
     { name: 'Home', href: '/dashboard', current: pathname === '/dashboard' },
@@ -74,7 +72,7 @@ export default function Navbar() {
                       <Menu.Button className="flex rounded-full bg-white text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
                         <span className="sr-only">Open user menu</span>
                         <div className="h-8 w-8 rounded-full bg-blue-600 flex items-center justify-center text-white">
-                          {userData?.displayName?.charAt(0) || user?.email?.address?.charAt(0) || 'U'}
+                          {user?.email?.address?.charAt(0)?.toUpperCase() || 'U'}
                         </div>
                       </Menu.Button>
                     </div>
@@ -178,12 +176,12 @@ export default function Navbar() {
                   <div className="flex items-center px-4">
                     <div className="flex-shrink-0">
                       <div className="h-10 w-10 rounded-full bg-blue-600 flex items-center justify-center text-white">
-                        {userData?.displayName?.charAt(0) || user?.email?.address?.charAt(0) || 'U'}
+                        {user?.email?.address?.charAt(0) || 'U'}
                       </div>
                     </div>
                     <div className="ml-3">
                       <div className="text-base font-medium text-gray-800">
-                        {userData?.displayName || user?.email?.address || 'User'}
+                        {user?.email?.address || ''}
                       </div>
                       <div className="text-sm font-medium text-gray-500">
                         {user?.email?.address || ''}
