@@ -1,10 +1,9 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.29;
-
-import {Ownable} from "@openzeppelin/contracts/access/Ownable.sol";
-import {Initializable} from "@openzeppelin/contracts/proxy/utils/Initializable.sol";
-import {UUPSUpgradeable} from "@openzeppelin/contracts/proxy/utils/UUPSUpgradeable.sol";
-import {EnumerableSet} from "@openzeppelin/contracts/utils/structs/EnumerableSet.sol";
+import {Initializable} from "openzeppelin-contracts-upgradeable/contracts/proxy/utils/Initializable.sol";
+import {OwnableUpgradeable} from "openzeppelin-contracts-upgradeable/contracts/access/OwnableUpgradeable.sol";
+import {UUPSUpgradeable} from "openzeppelin-contracts-upgradeable/contracts/proxy/utils/UUPSUpgradeable.sol";
+import {EnumerableSet} from "openzeppelin-contracts/contracts/utils/structs/EnumerableSet.sol";
 import {IZKreditRegistry} from "./interfaces/IZKredit.sol";
 
 /**
@@ -16,7 +15,7 @@ contract ZKreditRegistry is
     IZKreditRegistry,
     Initializable,
     UUPSUpgradeable,
-    Ownable
+    OwnableUpgradeable
 {
     using EnumerableSet for EnumerableSet.AddressSet;
 
@@ -82,6 +81,13 @@ contract ZKreditRegistry is
             "ZKreditRegistry: caller is not ZKredit Core"
         );
         _;
+    }
+
+    // ============ Constructor ============
+
+    /// @custom:oz-upgrades-unsafe-allow constructor
+    constructor() {
+        _disableInitializers();
     }
 
     // ============ Initializer ============

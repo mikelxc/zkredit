@@ -1,12 +1,11 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.29;
 
-import {IERC20} from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
-import {SafeERC20} from "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
-import {ReentrancyGuard} from "@openzeppelin/contracts/utils/ReentrancyGuard.sol";
-import {Ownable} from "@openzeppelin/contracts/access/Ownable.sol";
-import {Initializable} from "@openzeppelin/contracts/proxy/utils/Initializable.sol";
-import {UUPSUpgradeable} from "@openzeppelin/contracts/proxy/utils/UUPSUpgradeable.sol";
+import {IERC20} from "openzeppelin-contracts/contracts/token/ERC20/IERC20.sol";
+import {SafeERC20} from "openzeppelin-contracts/contracts/token/ERC20/utils/SafeERC20.sol";
+import {Initializable} from "openzeppelin-contracts-upgradeable/contracts/proxy/utils/Initializable.sol";
+import {OwnableUpgradeable} from "openzeppelin-contracts-upgradeable/contracts/access/OwnableUpgradeable.sol";
+import {UUPSUpgradeable} from "openzeppelin-contracts-upgradeable/contracts/proxy/utils/UUPSUpgradeable.sol";
 import {IEntryPoint} from "account-abstraction/interfaces/IEntryPoint.sol";
 
 import {IZKreditCore, IZKreditRegistry, IZKreditValidator} from "./interfaces/IZKredit.sol";
@@ -20,8 +19,7 @@ contract ZKreditCore is
     IZKreditCore,
     Initializable,
     UUPSUpgradeable,
-    ReentrancyGuard,
-    Ownable
+    OwnableUpgradeable
 {
     using SafeERC20 for IERC20;
 
@@ -52,6 +50,13 @@ contract ZKreditCore is
 
     /// @notice Supported tokens whitelist (token => isSupported)
     mapping(address => bool) public supportedTokens;
+
+    /// @notice Reentrancy guard, locked = 1, unlocked = 2
+    uint256 private _reentrancyStatus;
+
+    /// @notice constants for reentrancy guard
+    uint256 private constant _NOT_ENTERED = 1;
+    uint256 private constant _ENTERED = 2;
 
     // ============ Events ============
 
@@ -114,6 +119,23 @@ contract ZKreditCore is
         _;
     }
 
+    /**
+     * @notice Prevents a contract from calling itself, directly or indirectly.
+     */
+    modifier nonReentrant() {
+        require(_reentrancyStatus != _ENTERED, "ZKreditCore: reentrant call");
+        _reentrancyStatus = _ENTERED;
+        _;
+        _reentrancyStatus = _NOT_ENTERED;
+    }
+
+    // ============ Constructor ============
+
+    /// @custom:oz-upgrades-unsafe-allow constructor
+    constructor() {
+        _disableInitializers();
+    }
+
     // ============ Initializer ============
 
     /**
@@ -137,6 +159,9 @@ contract ZKreditCore is
         _status.isInitialized = true;
         _status.paused = false;
         _status.version = VERSION;
+
+        // Initialize reentrancy guard
+        _reentrancyStatus = _NOT_ENTERED;
 
         // Native token (ETH) is always supported
         supportedTokens[address(0)] = true;
