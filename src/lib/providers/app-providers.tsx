@@ -6,10 +6,10 @@ import { UserProvider } from './user-provider';
 
 export function AppProviders({ children }: { children: ReactNode }) {
   return (
-    <PrivyAuthProvider>
-      <UserProvider>
-        {children}
-      </UserProvider>
-    </PrivyAuthProvider>
+      <PrivyAuthProvider>
+        <UserProvider>
+          {children}
+        </UserProvider>
+      </PrivyAuthProvider>
   );
 }

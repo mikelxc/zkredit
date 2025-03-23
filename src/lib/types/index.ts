@@ -23,10 +23,15 @@ export interface Asset {
 export interface CreditLine {
   id: string;
   userId: string;
+  name?: string;
   totalLimit: number;
   usedAmount: number;
+  limit: number; // Alias for totalLimit for compatibility
+  used: number; // Alias for usedAmount for compatibility
   interestRate: number;
   status: 'active' | 'inactive' | 'suspended';
+  collateralAssetIds: string[];
+  expiresAt: string;
   createdAt: string;
   updatedAt: string;
 }
@@ -69,9 +74,10 @@ export interface LockedBalance {
 export interface ZkProof {
   id: string;
   userId: string;
-  proofType: 'Asset Claim' | 'Credit Line' | 'Agent Authority';
+  proofType: 'ownership' | 'balance' | 'credit' | 'Asset Claim' | 'Credit Line' | 'Agent Authority';
   proofData: string;
   assetId: string;
+  assetTicker?: string; // Added for display purposes
   amount: number;
   targetChain: string;
   status: 'active' | 'expired' | 'revoked';

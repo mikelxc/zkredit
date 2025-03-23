@@ -4,6 +4,7 @@ import { ReactNode } from 'react';
 import { usePrivy } from '@privy-io/react-auth';
 import { useRouter } from 'next/navigation';
 import Navbar from './navbar';
+import TestnetBadge from '../testnet-badge';
 
 export default function DashboardLayout({ children }: { children: ReactNode }) {
   const { ready, authenticated } = usePrivy();
@@ -11,7 +12,7 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
 
   // Redirect to login if not authenticated
   if (ready && !authenticated) {
-    router.push('/');
+    router.push('/auth');
     return null;
   }
 
@@ -30,6 +31,9 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
   return (
     <div className="min-h-screen bg-gray-50">
       <Navbar />
+      <div className="fixed top-16 right-4 z-50">
+        <TestnetBadge />
+      </div>
       <main className="py-6">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           {children}
