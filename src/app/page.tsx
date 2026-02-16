@@ -105,40 +105,41 @@ export default function LandingPage() {
                 </div>
                 <div className="space-y-2">
                   <h1 className="text-3xl font-bold tracking-tighter sm:text-5xl xl:text-6xl/none bg-gradient-to-r from-white to-zinc-400 bg-clip-text text-transparent">
-                    Build the missing credit settlement layer
+                    Bounded spending authority
                     <div className="mt-2 mb-4">
                       <span className="text-white mr-2">for</span>
                       <RotatingText
                         texts={[
                           "AI Agents",
-                          "Your Organization",
-                          "Embedded Wallets",
-                          "Exchange Users",
+                          "Autonomous Workflows",
+                          "Teams & Organizations",
+                          "Multi-Chain Apps",
                         ]}
                         className="text-violet-400"
                       />
                     </div>
                   </h1>
                   <p className="max-w-[600px] text-zinc-400 md:text-xl">
-                    Your Cross-Chain Financial Passport. Use your assets
-                    anywhere without moving them. Prove ownership with
-                    zero-knowledge and spend across any chain.
+                    zkredit lets humans fund and agents execute within enforceable limits.
+                    Start on Base Sepolia with our live Claw primitive and extend to Solana.
                   </p>
                 </div>
                 <div className="flex flex-col gap-2 min-[400px]:flex-row">
-                  <Button
-                    size="lg"
-                    className="bg-gradient-to-r from-violet-600 to-blue-600 hover:from-violet-700 hover:to-blue-700 gap-1 transition-all duration-300 hover:scale-105"
-                  >
-                    Join Waitlist <ArrowRight className="h-4 w-4" />
-                  </Button>
-                  <Link href="/demo">
+                  <Link href="https://hexxhub.github.io/claw/" target="_blank" rel="noopener noreferrer">
+                    <Button
+                      size="lg"
+                      className="bg-gradient-to-r from-violet-600 to-blue-600 hover:from-violet-700 hover:to-blue-700 gap-1 transition-all duration-300 hover:scale-105"
+                    >
+                      Open Live Claw App <ArrowRight className="h-4 w-4" />
+                    </Button>
+                  </Link>
+                  <Link href="https://github.com/Hexxhub/claw" target="_blank" rel="noopener noreferrer">
                     <Button
                       size="lg"
                       variant="outline"
                       className="border-zinc-700 text-white hover:bg-zinc-800 transition-all duration-300 hover:border-violet-500"
                     >
-                      Get Started
+                      View Claw on GitHub
                     </Button>
                   </Link>
                 </div>
@@ -188,12 +189,10 @@ export default function LandingPage() {
                   The Problem
                 </div>
                 <h2 className="text-3xl font-bold tracking-tighter md:text-4xl/tight bg-gradient-to-r from-white to-zinc-400 bg-clip-text text-transparent">
-                  Today&apos;s Multi-Wallet Future Is Crippled by
-                  Blockchain&apos;s Fragmented Nature
+                  Agent payments are still all-or-nothing
                 </h2>
                 <p className="max-w-[900px] text-zinc-400 md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
-                  The current blockchain ecosystem forces inefficient capital
-                  allocation and limits cross-chain operations.
+                  Teams either keep humans in every transaction (no autonomy) or give agents full wallet access (high risk).
                 </p>
               </div>
             </div>
@@ -209,12 +208,11 @@ export default function LandingPage() {
                   <Card className="bg-zinc-900 border-zinc-800 hover:border-violet-500/50 transition-all duration-300 hover:-translate-y-1">
                     <CardHeader>
                       <CardTitle className="text-white">
-                        Pre-Funding Requirements
+                        Full-Custody Risk
                       </CardTitle>
                     </CardHeader>
                     <CardContent className="text-zinc-400">
-                      Users need pre-funded wallets on every chain they operate
-                      on, creating significant capital inefficiency.
+                      Giving autonomous agents unrestricted key control creates an unacceptable blast radius for real money movement.
                     </CardContent>
                   </Card>
                 </motion.div>
@@ -222,12 +220,11 @@ export default function LandingPage() {
                   <Card className="bg-zinc-900 border-zinc-800 hover:border-violet-500/50 transition-all duration-300 hover:-translate-y-1">
                     <CardHeader>
                       <CardTitle className="text-white">
-                        Slow & Expensive Bridging
+                        Human Approval Bottlenecks
                       </CardTitle>
                     </CardHeader>
                     <CardContent className="text-zinc-400">
-                      Moving assets between chains is slow, expensive, and
-                      capital-inefficient, limiting responsiveness.
+                      If humans must sign every payment, agents can&apos;t operate continuously or at software speed.
                     </CardContent>
                   </Card>
                 </motion.div>
@@ -237,12 +234,11 @@ export default function LandingPage() {
                   <Card className="bg-zinc-900 border-zinc-800 hover:border-violet-500/50 transition-all duration-300 hover:-translate-y-1">
                     <CardHeader>
                       <CardTitle className="text-white">
-                        Idle Exchange Assets
+                        No Native Spend Limits
                       </CardTitle>
                     </CardHeader>
                     <CardContent className="text-zinc-400">
-                      Centralized exchange assets sit idle rather than powering
-                      operations across multiple chains.
+                      Most wallet tooling lacks first-class policy constraints like per-agent caps, expiry, and recoverable unused funds.
                     </CardContent>
                   </Card>
                 </motion.div>
@@ -250,12 +246,11 @@ export default function LandingPage() {
                   <Card className="bg-zinc-900 border-zinc-800 hover:border-violet-500/50 transition-all duration-300 hover:-translate-y-1">
                     <CardHeader>
                       <CardTitle className="text-white">
-                        Limited Credit Validation
+                        Weak Agent Accountability
                       </CardTitle>
                     </CardHeader>
                     <CardContent className="text-zinc-400">
-                      Credit facilities can&apos;t easily validate operations
-                      across chains, restricting financing options.
+                      Teams need onchain-verifiable receipts and policy-bound execution, not opaque agent spending behavior.
                     </CardContent>
                   </Card>
                 </motion.div>
@@ -277,11 +272,10 @@ export default function LandingPage() {
                   Our Solution
                 </div>
                 <h2 className="text-3xl font-bold tracking-tighter md:text-4xl/tight bg-gradient-to-r from-white to-zinc-400 bg-clip-text text-transparent">
-                  ZK-Powered Financial Passport System
+                  Policy-constrained spending for agents
                 </h2>
                 <p className="max-w-[900px] text-zinc-400 md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
-                  ZKredit creates a unified financial layer where users can
-                  prove asset backing without moving or locking those assets.
+                  zkredit combines standards-aligned ownership (ERC-7978 semantics) with practical bounded spend flows already shipping as Claw.
                 </p>
               </div>
             </div>
@@ -297,16 +291,15 @@ export default function LandingPage() {
                   <CardHeader>
                     <Wallet className="h-10 w-10 text-violet-500 mb-2" />
                     <CardTitle className="text-white">
-                      Asset Claim Circuit
+                      Bounded Spend Primitive
                     </CardTitle>
                     <CardDescription className="text-zinc-400">
-                      Cryptographically proves access to specific assets
+                      Humans fund, agents execute inside hard limits
                     </CardDescription>
                   </CardHeader>
                   <CardContent className="text-zinc-400">
                     <p>
-                      Verifies assets on CEXs, other chains, or wallets without
-                      revealing exact balances or exposing private information.
+                      Define max spend, expiry, and authority boundaries so autonomous systems can pay without full wallet custody.
                     </p>
                   </CardContent>
                 </Card>
@@ -316,16 +309,15 @@ export default function LandingPage() {
                   <CardHeader>
                     <Key className="h-10 w-10 text-violet-500 mb-2" />
                     <CardTitle className="text-white">
-                      Authority Circuit
+                      OpenClaw Skill Integration
                     </CardTitle>
                     <CardDescription className="text-zinc-400">
-                      Verifies permissions and spending limits
+                      Usable directly in real agent workflows
                     </CardDescription>
                   </CardHeader>
                   <CardContent className="text-zinc-400">
                     <p>
-                      Enables secure delegation across any chain without
-                      compromising the security of the primary wallet or assets.
+                      Claw is already exposed as an OpenClaw skill, allowing policy-constrained spend calls from autonomous agents today.
                     </p>
                   </CardContent>
                 </Card>
@@ -335,16 +327,15 @@ export default function LandingPage() {
                   <CardHeader>
                     <Database className="h-10 w-10 text-violet-500 mb-2" />
                     <CardTitle className="text-white">
-                      Credit Verification Circuit
+                      Multi-Chain Execution
                     </CardTitle>
                     <CardDescription className="text-zinc-400">
-                      Enables verifiable credit lines
+                      Base Sepolia live, Solana in progress
                     </CardDescription>
                   </CardHeader>
                   <CardContent className="text-zinc-400">
                     <p>
-                      Credit providers can issue credit based on performance
-                      history or off-chain KYC with cryptographic verification.
+                      We are actively unifying bounded spending infrastructure across EVM and Solana under one zkredit product surface.
                     </p>
                   </CardContent>
                 </Card>
@@ -642,22 +633,28 @@ export default function LandingPage() {
             </p>
             <div className="flex items-center gap-4">
               <Link
-                href="#"
+                href="https://x.com/mikelxc"
+                target="_blank"
+                rel="noopener noreferrer"
                 className="text-zinc-400 hover:text-white transition-colors"
               >
                 Twitter
               </Link>
               <Link
-                href="#"
+                href="https://github.com/mikelxc/zkredit"
+                target="_blank"
+                rel="noopener noreferrer"
                 className="text-zinc-400 hover:text-white transition-colors"
               >
-                Discord
+                zkredit GitHub
               </Link>
               <Link
-                href="#"
+                href="https://github.com/Hexxhub/claw"
+                target="_blank"
+                rel="noopener noreferrer"
                 className="text-zinc-400 hover:text-white transition-colors"
               >
-                GitHub
+                Claw
               </Link>
             </div>
           </div>
