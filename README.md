@@ -1,36 +1,86 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# zkredit
 
-## Getting Started
+Bounded spending authority infrastructure for autonomous agents.
 
-First, run the development server:
+**Thesis:** agents need payment autonomy without full-custody risk.  
+zkredit provides constrained spending primitives where humans fund, agents execute within policy limits, and unspent funds remain recoverable.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+---
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Current Multi-Chain Status
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+zkredit currently builds on top of the Claw primitive and is actively consolidating that work into a unified zkredit product surface.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+### 1) Base Sepolia (Live)
 
-## Learn More
+**Contract (Claw V2):** `0xD812EA3A821A5b4d835bfA06BAf542138e434D48`  
+**Network:** Base Sepolia (84532)  
+**USDC:** `0x036CbD53842c5426634e7929541eC2318f3dCF7e`
 
-To learn more about Next.js, take a look at the following resources:
+#### Implemented features
+- Non-custodial spending control
+- Batch minting of spending authorities
+- A2A tipping flows with on-chain memos
+- Spend memo support for payment context
+- NFT-based authority model aligned with ERC-7978 semantics
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+#### Live app
+- https://hexxhub.github.io/claw/
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+### 2) Solana (In Progress)
 
-## Deploy on Vercel
+Solana implementation is under active development using an Anchor-based architecture:
+- NFT-based authority representation
+- PDA-based state tracking for max/spent/expiry/funder
+- SPL token delegate pattern for bounded spend execution
+- Burn/recovery semantics for unused funds
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+Current repo state:
+- `claw-solana/` in this workspace
+- status: early implementation / hackathon buildout
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+---
+
+## OpenClaw Integration
+
+The spending primitive is already exposed as an **OpenClaw skill** (`claw`) so autonomous agents can execute bounded payment actions directly inside agent workflows.
+
+This allows us to pressure-test policy-constrained payments in production-style agent loops before final zkredit API/UX consolidation.
+
+---
+
+## Standards Context
+
+zkredit’s authority model is aligned with **ERC-7978** (Non-Fungible Account Tokens) design semantics:
+- transferable ownership/control abstraction
+- explicit authority boundaries
+- verifiable on-chain execution constraints
+
+---
+
+## Why this exists
+
+Most agent payment setups force a bad tradeoff:
+1. Human signs every action (no real autonomy), or
+2. Agent gets full wallet custody (high blast radius)
+
+zkredit targets the middle path: **safe autonomy through bounded authority**.
+
+---
+
+## Repository Notes
+
+This repo currently contains:
+- zkredit app scaffold and contracts
+- integration references to Base Sepolia and Solana Claw work
+
+As the next step, we’ll unify naming/surfaces so Base + Solana implementations are represented under a single zkredit protocol/app narrative.
+
+---
+
+## Links
+
+- zkredit site: https://www.zkredit.xyz/
+- Claw app (Base Sepolia): https://hexxhub.github.io/claw/
+- Claw (EVM): https://github.com/Hexxhub/claw
+- lxc profile/resume: https://lxc.xyz/
